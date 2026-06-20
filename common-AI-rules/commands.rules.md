@@ -1,8 +1,12 @@
 # Common User Command History Rules
 
+## Logging order
+
+- **Before starting any job**, log the user's command in `logs/commands.log.md` in the local project, then begin the work.
+
 ## History
 
-- Store the actual command history in `AI-rules/commands.log.md`.
+- Store the actual command history in `logs/commands.log.md` in the local project.
 - Keep only the latest 40 entries, newest first.
 - The newest entry is always numbered 40. When a new entry is added, renumber all existing entries downward by 1. Drop the oldest entry if it would be pushed below 1.
 
