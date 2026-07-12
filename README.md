@@ -9,8 +9,11 @@ Centralized repository for **development standards**, **architecture guidelines*
 ## Quick Navigation
 
 - **Need code-level standards?** → See [Common Development Rules](#common-development-rules)
-- **Need architecture templates?** → See [Common Architecture](#common-architecture)
-- **Getting started with a new project?** → See [How to Use This Repository](#how-to-use-this-repository)
+- **Need architecture templates?** → See [Common Architecture Templates](#common-architecture-templates)
+- **Setting up a new project?** → See [Global Rules & Local Extensions](#global-rules--local-extensions)
+- **Extending rules for your project?** → See [Creating Local Rules for Your Project](#creating-local-rules-for-your-project)
+- **AI Assistants:** Read [Global Rules & Local Extensions](#global-rules--local-extensions) first
+- **Getting started?** → See [How to Use This Repository](#how-to-use-this-repository)
 
 ---
 
@@ -717,7 +720,7 @@ public void apiResponse_doesNotExpose_secrets() {
 
 **Status:** Production-ready templates (require customization for each project)
 
-**Total Size:** ~172KB across 7 templates | **Last Updated:** 2026-07-12
+**Total Size:** ~209KB across 9 templates | **Last Updated:** 2026-07-12
 
 ### Template Files
 
@@ -812,6 +815,35 @@ public void apiResponse_doesNotExpose_secrets() {
 - Performance optimization (memoization, selectors)
 - Testing state management (unit, integration)
 
+#### Quality & Observability
+
+| Template | Purpose | Audience | Size |
+|----------|---------|----------|------|
+| **[TESTING_STANDARDS_TEMPLATE.md](./common-architecture/originals/TESTING_STANDARDS_TEMPLATE.md)** | Testing strategy, determinism, isolation, cross-tenant tests, coverage targets | QA engineers, developers | ~14KB |
+| **[EVENTS_ARCHITECTURE_TEMPLATE.md](./common-architecture/originals/EVENTS_ARCHITECTURE_TEMPLATE.md)** | Event-driven patterns, emission rules, payload structure, consumers, idempotency | Backend engineers | ~15KB |
+
+**TESTING_STANDARDS_TEMPLATE.md**
+- Testing philosophy and tier-specific strategies
+- Test classification (unit, integration, end-to-end)
+- Test determinism, independence, repeatability requirements
+- Regression testing workflow (test first, then fix)
+- Cross-tenant denial testing (mandatory)
+- Secrets protection in tests (mandatory)
+- Code coverage targets by tier (UI, UIControllers, API, Services, Repositories)
+- Test execution and CI/CD pipeline
+- Maven/JaCoCo configuration integration
+
+**EVENTS_ARCHITECTURE_TEMPLATE.md**
+- Event emission rules (only after transaction succeeds)
+- Event payload structure (mandatory fields, secrets protection)
+- Event consumers and routing patterns
+- Idempotency strategy (handle duplicate events safely)
+- Event retention and replay policies
+- Audit trail and compliance using events
+- Monitoring and observability for events
+- Testing event-driven code
+- Common mistakes (orphaned events, secrets, non-idempotent)
+
 #### Execution & Operations
 
 | Template | Purpose | Audience | Size |
@@ -878,6 +910,224 @@ These templates work together with Common Development Rules:
 1. **Start with Architecture Templates** to understand *why* (strategic decisions)
 2. **Review Development Rules** to see *how* (code-level enforcement)
 3. **Implement using Code patterns** from the rules
+
+---
+
+## Global Rules & Local Extensions
+
+**Important:** These are GLOBAL baseline standards. Each project should have LOCAL rules that extend and specialize these standards.
+
+### Global vs Local Rules
+
+**Global Rules** (this repository)
+- Apply to ALL projects
+- Baseline standards everyone follows
+- Language-agnostic patterns (architecture, security, testing)
+- Rarely change (quarterly review)
+
+**Local Rules** (in each project's `AI-rules/` directory)
+- Project-specific extensions
+- Override global rules only with approval
+- Domain-specific patterns (business logic, naming conventions)
+- Change frequently (as project evolves)
+
+### Example: Naming Standards
+
+**Global Rule:**
+```
+Rule: PascalCase for all Java class names
+Example: CategoryManagementPanel, SupplierService
+```
+
+**Local Extension** (in project's `AI-rules/naming-conventions.md`):
+```
+Rule: Prefix all domain-specific classes with domain name
+Example: PaymentProcessorService, PaymentValidatorRule
+(Extends global PascalCase rule with domain prefix requirement)
+```
+
+### Example: Security Rules
+
+**Global Rule:**
+```
+Rule: Multi-tenant isolation required
+Rule: No secrets in logs, events, or API responses
+```
+
+**Local Extension** (in project's `AI-rules/security-extensions.md`):
+```
+Rule: PCI-DSS compliance required (project processes payments)
+Rule: All credit card data must use tokenization
+Rule: Audit log all payment operations (regulatory requirement)
+(Extends global multi-tenant rule with payment-specific requirements)
+```
+
+---
+
+## Creating Local Rules for Your Project
+
+### Step 1: Set Up Local Rules Directory
+
+```bash
+mkdir -p your-project/AI-rules/
+```
+
+### Step 2: Create Local Rules Files
+
+Reference global rules, then extend them:
+
+**File: `AI-rules/development-extensions.md`**
+```markdown
+# [PROJECT_NAME] Development Rules Extensions
+
+Extends: [../path/to/global/development.rules.md](../path/to/global/development.rules.md)
+
+## Domain-Specific Naming
+
+**Rule:** All payment-related classes prefixed with `Payment`
+
+Example: PaymentProcessor, PaymentValidator, PaymentGateway
+
+**Why:** Makes payment domain explicit, prevents naming collisions
+
+## Project-Specific Architecture
+
+**Rule:** Event-driven order processing (extends global architecture)
+
+Pattern:
+1. Order API receives request → emits OrderCreated event
+2. Inventory Service listens → checks stock
+3. Fulfillment Service listens → prepares shipment
+4. Payment Service listens → processes payment
+
+(Applies to this project only; global architecture is still mandatory)
+```
+
+**File: `AI-rules/security-extensions.md`**
+```markdown
+# [PROJECT_NAME] Security Rules Extensions
+
+Extends: [../path/to/global/security.rules.md](../path/to/global/security.rules.md)
+
+## PCI-DSS Compliance (Payment Processing)
+
+**Rule:** All credit card operations require PCI-DSS Level 1 compliance
+
+- NO raw credit card numbers in database
+- Use tokenization service for all cards
+- Audit every payment operation
+- Monthly security scan required
+
+(Extends global secrets protection rule with payment-specific requirements)
+
+## GDPR Compliance (User Data)
+
+**Rule:** User personal data retention limited to 30 days after account deletion
+
+- Logs: 7 days
+- Backups: 30 days
+- Audit trail: 1 year (anonymized)
+
+(Extends global audit logging with GDPR timeline requirements)
+```
+
+**File: `AI-rules/testing-extensions.md`**
+```markdown
+# [PROJECT_NAME] Testing Rules Extensions
+
+Extends: [../path/to/global/testing.rules.md](../path/to/global/testing.rules.md)
+
+## Payment Processing Tests (MANDATORY)
+
+Every payment operation requires:
+- Unit test: business logic
+- Integration test: payment gateway integration
+- End-to-end test: full transaction workflow
+- Security test: secrets not exposed
+
+(Extends global test quality rule with payment-specific test matrix)
+
+## Test Data
+
+- Use [Payment Gateway Sandbox](https://sandbox.payment-api.com)
+- Test cards: [See internal wiki](https://wiki.internal/test-cards)
+- Never use production merchant credentials
+
+## Coverage Targets
+
+- Payment Service: 95% coverage (critical)
+- Order Service: 85% coverage
+- Inventory Service: 80% coverage
+
+(Extends global coverage targets with project priorities)
+```
+
+### Step 3: Document for AI Assistants
+
+**File: `AI-rules/README.md` (in your project)**
+```markdown
+# [PROJECT_NAME] Local Rules
+
+This project uses:
+1. **Global Rules** from [project-settings/common-AI-rules/](../../project-settings/common-AI-rules/)
+2. **Local Extensions** in this directory
+
+## For AI Assistants
+
+When working on this project:
+1. Read GLOBAL rules first: [development.rules.md](../../project-settings/common-AI-rules/development.rules.md)
+2. Read LOCAL extensions: [development-extensions.md](./development-extensions.md)
+3. FOLLOW BOTH (local rules extend, not replace, global rules)
+
+## Files in This Directory
+
+- development-extensions.md — Domain naming, project-specific architecture
+- security-extensions.md — PCI-DSS, GDPR, data retention
+- testing-extensions.md — Payment testing matrix, coverage targets
+- operations-extensions.md — Deployment, incident response
+- README.md — This file
+
+## When to Create New Local Rules
+
+- Project-specific naming conventions
+- Regulatory requirements (PCI-DSS, HIPAA, GDPR, SOC2)
+- Business logic patterns (domain-driven events, workflows)
+- Team preferences (code review process, testing approach)
+- Performance targets (latency, throughput requirements)
+
+## When NOT to Create New Local Rules
+
+- ❌ Don't override global architecture rules (three-tier layering)
+- ❌ Don't weaken global security requirements
+- ❌ Don't skip global testing standards
+- ❌ Don't ignore global naming conventions
+
+## Requesting Exceptions
+
+If you need to deviate from a global rule:
+1. Document why (business requirement, technical constraint)
+2. Get approval from tech lead and security team
+3. Add exception to this README with rationale
+4. Set expiration date for exception (quarterly review)
+```
+
+### Step 4: AI Assistants Read Both
+
+**When AI (Claude Code) works on your project:**
+
+```
+AI reads global rules:
+  ✅ development.rules.md (three-tier architecture, naming)
+  ✅ testing-rules.md (determinism, isolation, regression)
+  ✅ commands.rules.md (command safety, source protection)
+
+AI reads local extensions:
+  ✅ AI-rules/development-extensions.md (Payment prefix, event pattern)
+  ✅ AI-rules/security-extensions.md (PCI-DSS, GDPR timeline)
+  ✅ AI-rules/testing-extensions.md (Payment test matrix, 95% coverage)
+
+AI implements following BOTH global + local rules
+```
 
 ---
 

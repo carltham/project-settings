@@ -37,9 +37,16 @@ This collection provides generic, project-agnostic templates for essential archi
 
 | Document | Purpose | Audience | Size |
 |----------|---------|----------|------|
-| **[FRONTEND_ARCHITECTURE_TEMPLATE.md](./FRONTEND_ARCHITECTURE_TEMPLATE.md)** | Frontend patterns, component architecture, state management | Frontend engineers | ~31KB |
+| **[FRONTEND_ARCHITECTURE_TEMPLATE.md](./FRONTEND_ARCHITECTURE_TEMPLATE.md)** | Frontend patterns, UIController pattern, component architecture, state management | Frontend engineers | ~33KB |
 | **[MOBILE_ARCHITECTURE_TEMPLATE.md](./MOBILE_ARCHITECTURE_TEMPLATE.md)** | Mobile-first design, offline-first patterns, device constraints | Mobile engineers | ~24KB |
 | **[STATE_MANAGEMENT_TEMPLATE.md](./STATE_MANAGEMENT_TEMPLATE.md)** | State patterns (Redux, MobX, service-based, Context API) | Frontend engineers | ~24KB |
+
+### Quality & Observability
+
+| Document | Purpose | Audience | Size |
+|----------|---------|----------|------|
+| **[TESTING_STANDARDS_TEMPLATE.md](./TESTING_STANDARDS_TEMPLATE.md)** | Testing strategy, determinism, isolation, cross-tenant tests, coverage by tier | QA engineers, developers | ~14KB |
+| **[EVENTS_ARCHITECTURE_TEMPLATE.md](./EVENTS_ARCHITECTURE_TEMPLATE.md)** | Event-driven patterns, emission rules, payload structure, consumers | Backend engineers | ~15KB |
 
 ### Execution & Operations
 
@@ -196,6 +203,57 @@ Security requirements, threat model, and incident response procedures.
 - Access control model (RBAC, ABAC)
 - Alert thresholds and escalation procedures
 - **Connect to:** Development rules for Repository layer isolation and input validation
+
+---
+
+### TESTING_STANDARDS_TEMPLATE.md
+
+Testing architecture and quality gates.
+
+**Sections:**
+```
+1. Test Classification           (Unit, integration, end-to-end)
+2. Test Quality Standards        (Determinism, independence, regression)
+3. Security & Isolation Testing  (Cross-tenant denial, secrets)
+4. Data Safety                   (No production data in tests)
+5. Tier-Specific Strategies      (What to test at each layer)
+6. Test Execution & CI/CD        (Local, PR, deployment)
+7. Code Coverage                 (Targets by tier)
+8. Common Testing Mistakes       (And how to fix them)
+```
+
+**Key Customizations:**
+- Coverage targets for each tier (UI, UIControllers, API, Services, Repositories)
+- Test database strategy (in-memory vs Docker)
+- External services to mock
+- Test naming conventions
+- Deployment gates (must test pass before merge)
+- **Connect to:** testing-rules.md for Maven configuration, development.rules.md for layering
+
+---
+
+### EVENTS_ARCHITECTURE_TEMPLATE.md
+
+Event-driven patterns and async messaging.
+
+**Sections:**
+```
+1. Event Emission Rules          (When to emit, after transaction succeeds)
+2. Event Payload Structure       (Mandatory fields, secrets protection)
+3. Event Routing & Consumption   (Subscribers, ordering, idempotency)
+4. Audit & Compliance            (Audit trail, retention, replays)
+5. Monitoring & Observability    (Metrics, logging, alerts)
+6. Testing Event-Driven Code     (Unit, integration, idempotency tests)
+7. Common Mistakes               (Orphaned events, secrets, non-idempotent)
+```
+
+**Key Customizations:**
+- Event platform choice (Kafka, RabbitMQ, AWS SNS/SQS)
+- Domain-specific events (list all events)
+- Event retention policy (days, archive location)
+- Consumer list (who consumes which events)
+- Replay and recovery strategy
+- **Connect to:** development.rules.md for event emission rules
 
 ---
 
@@ -445,13 +503,19 @@ These templates are living documents. If you improve them:
 **Companion Documents:**
 - [**Common Development Rules**](../common-AI-rules/development.rules.md) — Code-level standards and patterns (Java, architecture, naming, security)
 
-**Inside this directory:**
-- [`ARCHITECTURE_PRINCIPLES_TEMPLATE.md`](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design & philosophy (~23KB)
-- [`API_STANDARDS_TEMPLATE.md`](./API_STANDARDS_TEMPLATE.md) — REST API guidelines (~13KB)
-- [`SECURITY_POLICY_TEMPLATE.md`](./SECURITY_POLICY_TEMPLATE.md) — Security & compliance (~16KB)
-- [`FRONTEND_ARCHITECTURE_TEMPLATE.md`](./FRONTEND_ARCHITECTURE_TEMPLATE.md) — Frontend patterns (~31KB)
+**Core Architecture:**
+- [`ARCHITECTURE_PRINCIPLES_TEMPLATE.md`](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design, layering, audit (~31KB)
+- [`API_STANDARDS_TEMPLATE.md`](./API_STANDARDS_TEMPLATE.md) — REST API, error model, schema-first (~18KB)
+- [`SECURITY_POLICY_TEMPLATE.md`](./SECURITY_POLICY_TEMPLATE.md) — Security, compliance, multi-tenant (~17KB)
+
+**Platform-Specific:**
+- [`FRONTEND_ARCHITECTURE_TEMPLATE.md`](./FRONTEND_ARCHITECTURE_TEMPLATE.md) — Frontend, UIController pattern (~33KB)
 - [`MOBILE_ARCHITECTURE_TEMPLATE.md`](./MOBILE_ARCHITECTURE_TEMPLATE.md) — Mobile-first design (~24KB)
 - [`STATE_MANAGEMENT_TEMPLATE.md`](./STATE_MANAGEMENT_TEMPLATE.md) — State patterns (~24KB)
+
+**Quality & Operations:**
+- [`TESTING_STANDARDS_TEMPLATE.md`](./TESTING_STANDARDS_TEMPLATE.md) — Testing strategy, coverage (~14KB)
+- [`EVENTS_ARCHITECTURE_TEMPLATE.md`](./EVENTS_ARCHITECTURE_TEMPLATE.md) — Event-driven patterns (~15KB)
 - [`SPRINT_STRATEGY_TEMPLATE.md`](./SPRINT_STRATEGY_TEMPLATE.md) — Sprint execution (~6KB)
 
 **External Resources:**
