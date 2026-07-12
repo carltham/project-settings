@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Read(//mnt/DATA/WORKSPACE/project-architecture/originals/**)"
+      "Read(//mnt/DATA/WORKSPACE/project-architecture/originals/**)",
+      "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -type f \\\\\\( -name \"README*\" -o -name \"*.md\" \\\\\\) | head -20)",
+      "Read(//mnt/DATA/0.present-projects/Active/**)",
+      "Read(//mnt/DATA/0.present-projects/Active/UML-Generator/**)",
+      "Read(//mnt/DATA/0.present-projects/Active/MER-Knowledge-Tree/**)",
+      "Read(//mnt/DATA/0.present-projects/Active/GSDev/**)",
+      "Bash(ls -la /mnt/DATA/0.present-projects/Active/ | grep -E \"^d\" | awk '{print $NF}' | grep -v \"^\\\\.\" | sort)",
+      "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -name \"README*\" -o -name \"*.md\" -type f 2>/dev/null | grep -E \"\\(EBS-Brain|GSPos|GSBoard|GSLang|monosplitter|gustafs\\)\" | head -10)",
+      "Read(//mnt/DATA/0.present-projects/Active/EBS-Brain/**)",
+      "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -name \"README*\" -o -name \"Readme*\" | head -15)"
     ]
   }
 }
