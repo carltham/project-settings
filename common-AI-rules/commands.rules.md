@@ -7,17 +7,17 @@
 ## History
 
 - Store the actual command history in `logs/commands.log.md` in the local project.
-- Keep only the latest 40 entries, newest first.
-- The newest entry is always numbered 40. When a new entry is added, renumber all existing entries downward by 1. Drop the oldest entry if it would be pushed below 1.
+- Keep only the latest 40 entries, newest first (discard older entries as new ones are added).
 
 ## Entry format
 
 ```text
-N. YY-MM-DD HH:MM CEST (prefix): ~ command
+N. YY-MM-DD HH:MM (prefix): ~ command
 ```
 
-- Always use system time in the Swedish timezone (CEST/CET). Use `time unavailable` only if system time cannot be obtained.
-- Preserve the user's command text exactly as written.
+- Use system timezone and time
+- Preserve the user's command text exactly as written
+- Use `time unavailable` only if system time cannot be obtained
 
 ## AI prefixes
 

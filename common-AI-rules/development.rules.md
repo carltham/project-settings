@@ -1,36 +1,12 @@
 # Common Development Rules
 
-## Git
+## Git & Automation
 
 - Do not commit anything automatically. Always wait for an explicit commit instruction from the user.
-
-## AI and external input
-
 - AI and OCR output is untrusted advisory data. It MAY propose or pre-fill a command but MUST NOT post or persist data directly.
 - Accepting a suggestion MUST enter the same authorization, validation, and audit workflow as manually entered input.
 
-## API design
-
-- Define public endpoints and schemas before implementing controllers or clients.
-- Use one common structured error model with a stable code, error ID, timestamp, severity, source, and field details.
-- UI guards improve navigation but never replace server-side authorization.
-
-## Security and isolation
-
-- Enforce authorization in both API and business-service layers.
-- Reject cross-tenant or out-of-scope identifiers before repository access, and scope every repository query by tenant/company as applicable.
-- Record the actor and correlation context for every write.
-- Never store refresh tokens in browser local storage.
-- Keep provider secrets and tokens encrypted at rest and out of configuration files, logs, errors, events, and API responses.
-- Audit authentication events, permission failures, writes, imports, and privileged access.
-
-## Events and observability
-
-- Emit business events only after the associated transaction succeeds.
-- Event payloads MUST include stable aggregate identity and enough context for audit correlation without leaking secrets.
-- Structured logs SHOULD include tenant ID, correlation ID, actor ID, and event type when permitted, but MUST NOT expose confidential content.
-
-## Java Class Naming Standards
+## Java Class Naming Standards (MANDATORY)
 
 ### Rule 1: PascalCase (UpperCamelCase) - MANDATORY
 All Java class names must use PascalCase with no underscores or lowercase starts.
@@ -78,10 +54,11 @@ Each Java file must be named exactly after its public class (case-sensitive). Th
 - Never: File `MainFrame.java` containing `public class GSPosApplicationFrame`
 - Impact: Improves IDE support, code discoverability, and developer experience
 
-## Architecture and Layering Standards
+## Architecture and Layering Standards - MANDATORY
 
-### Three-Tier Architecture Pattern - MANDATORY
-All applications must follow strict three-tier separation: **Swing/UI → UIControllers → REST API → Services → Repositories → Database**
+### Three-Tier Architecture Pattern
+
+All applications must follow strict six-tier separation: **Swing/UI → UIControllers → REST API → Services → Repositories → Database**
 
 ```
 Tier 1 (UI):         Swing/AWT components (JFrame, JPanel, JDialog)
@@ -92,23 +69,37 @@ Tier 5 (Data):       @Repository (persistence, queries)
 Tier 6 (Database):   MySQL, PostgreSQL, etc.
 ```
 
-**Rules**:
-- Swing classes ONLY handle UI concerns (layout, rendering, events)
-- UIControllers handle state management and delegate via HttpClient
-- Services handle business logic and validation
-- Repositories handle data persistence
-- NO database connections in UI layer
-- NO service instantiation in UI layer
-- NO Spring context access from Swing components
+**Core Rule**: Each tier handles ONE responsibility. No tier crosses into another's domain.
 
-### Rule: No AppView in Swing Classes - MANDATORY
-Swing/AWT classes must NOT import or use `gs.Application.AppView`. This couples UI to application infrastructure and breaks testability.
+### Tier 1: UI Layer (Swing/AWT)
+- ✅ Layout, rendering, event handling ONLY
+- ❌ NO business logic, NO database access, NO service instantiation
+- ❌ NEVER import `gs.Application.AppView`
+- ❌ NEVER import Spring or Repository classes
+- Delegates to UIControllers only
 
-**Correct Pattern**:
+**Example**:
 ```java
-// ✅ CORRECT: Framework-agnostic UIController
+public class CategoryEditorPanel extends JPanel {
+    private CategoryEditorUIController controller;  // Only dependency
+    
+    private void onSave() {
+        controller.save(getFormData());  // Delegates only
+    }
+}
+```
+
+### Tier 2: UIControllers (State Management)
+- ✅ Framework-agnostic (ZERO Swing/AWT imports, ZERO database imports)
+- ✅ Communicate via HttpClient for REST API calls
+- ✅ In-memory state and UI listeners
+- ❌ NO database code, NO service instantiation, NO Spring context access
+- Testable without UI framework or database
+
+**Example**:
+```java
 public class CategoryEditorUIController implements EditorUIController {
-    private HttpClient httpClient;
+    private final HttpClient httpClient;  // Only dependency
     
     public CategoryEditorUIController(HttpClient httpClient) {
         this.httpClient = httpClient;
@@ -118,127 +109,104 @@ public class CategoryEditorUIController implements EditorUIController {
         httpClient.post("/api/categories", dto, CategoryDto.class);
     }
 }
-
-// ✅ CORRECT: Swing class delegates to controller
-public class CategoryEditorPanel extends JPanel {
-    private CategoryEditorUIController controller;
-    
-    public CategoryEditorPanel(CategoryEditorUIController controller) {
-        this.controller = controller;
-    }
-    
-    private void onSave() {
-        controller.save(getFormData());  // Delegates to controller
-    }
-}
 ```
 
-**Violations**:
-- Never: `private AppView m_App;` in Swing classes
-- Never: `m_App.getRepository()` in panels
-- Never: `m_App.getService()` in dialogs
-- Never: Direct repository access from UI layer
+### Tier 3: REST API (@RestController)
+- ✅ HTTP endpoints, request/response handling
+- ✅ API-level validation
+- ✅ Delegates to Services
+- ❌ NO database access, NO direct Repository instantiation
 
-### Rule: Framework-Agnostic UIControllers - MANDATORY
-UIControllers must have ZERO Swing/AWT imports and ZERO direct database access.
+### Tier 4: Business Services (@Service)
+- ✅ Business logic, validation, rules
+- ✅ Delegates to Repositories
+- ❌ NO database code, NO direct Repository creation
+- Use dependency injection for repository access
 
-**Correct**:
-- UIController imports: Only DTOs, interfaces, standard Java
-- Communication: HttpClient for REST API calls
-- State: In-memory fields, listeners for UI updates
-- NO database code
-- NO Swing dependencies
-- NO direct service instantiation
-
-**Testing Benefit**: UIControllers can be tested without UI framework or database
-
-### Rule: Dependency Injection Over Direct Instantiation - MANDATORY
-Use constructor-based dependency injection. Never use `new ServiceClass()`.
-
-**Correct Pattern**:
+**Example**:
 ```java
-// ✅ CORRECT: Constructor injection
 @Service
 public class CategoryService {
-    private final ICategoryRepository repository;
+    private final ICategoryRepository repository;  // Injected
     
     @Autowired
     public CategoryService(ICategoryRepository repository) {
         this.repository = repository;
     }
-}
-
-// ✅ CORRECT: Interface dependency
-public class CategoryEditorUIController {
-    private final HttpClient httpClient;  // Injected
     
-    public CategoryEditorUIController(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-}
-```
-
-**Violations**:
-- Never: `new CategoryService()` in Swing code
-- Never: `new RepositoryImpl()` anywhere
-- Never: `new DatabaseConnection()` outside config
-
-### Rule: Database Logic Isolation - MANDATORY
-All database operations (SQL, RecordSet, JDBC) must be in Repository layer only.
-
-**Correct**:
-```java
-// ✅ IN REPOSITORY LAYER
-@Repository
-public class CategoryRepository implements ICategoryRepository {
-    public List<CategoryDto> findAll() {
-        // Database query here
-    }
-}
-
-// ✅ IN SERVICE LAYER
-@Service
-public class CategoryService {
     public List<CategoryDto> getCategories() {
         return repository.findAll();  // Delegates to repository
     }
 }
 ```
 
-**Violations**:
-- Never: `executeQuery()` in Swing panels
-- Never: `PreparedStatement` in UI code
-- Never: `ResultSet` processing in dialogs
-- Never: JDBC code outside Repository
+### Tier 5: Repositories (@Repository)
+- ✅ ALL database operations (SQL, RecordSet, JDBC) ONLY here
+- ✅ Queries, persistence, data access
+- ❌ NO business logic, NO service logic
+- NO direct instantiation in other layers
 
-### Rule: Configuration Classes for Infrastructure - MANDATORY
-Database connections, Spring context, and application bootstrap logic belong in configuration classes, NOT in UI.
-
-**Correct Pattern**:
+**Example**:
 ```java
-// ✅ CONFIGURATION CLASS
+@Repository
+public class CategoryRepository implements ICategoryRepository {
+    public List<CategoryDto> findAll() {
+        // Database query here - only place for SQL/JDBC
+    }
+}
+```
+
+### Tier 6: Database
+- ✅ Raw data storage (MySQL, PostgreSQL, etc.)
+- Only accessed through Repository layer
+
+### Dependency Injection (MANDATORY)
+- **Always use constructor-based injection**
+- Never use `new ServiceClass()`, `new RepositoryImpl()`, or `new DatabaseConnection()`
+- Exception: `new DatabaseConnection()` only in @Configuration classes
+
+**Example**:
+```java
 @Configuration
 public class DatabaseConfiguration {
     @Bean
     public DatabaseConnection databaseConnection() {
-        // Database setup here
-        return new DatabaseConnection(...);
+        return new DatabaseConnection(...);  // Only place for 'new'
     }
-}
-
-// ✅ UI LAYER (No database concerns)
-public class PointOfSalesApplicationFrame extends JFrame {
-    // Only UI concerns here
-    // No database, no Spring context, no AppView
 }
 ```
 
-**Violations**:
-- Never: Database initialization in JFrame
-- Never: Spring ApplicationContext in Swing
-- Never: DatabaseConnection creation in panels
+### Violations (Never Do These)
+- ❌ Database code in UI layer
+- ❌ Service instantiation in Swing code
+- ❌ AppView import in Swing classes
+- ❌ Direct database access from Service or API layers
+- ❌ Spring context access from Swing components
+- ❌ PreparedStatement in UI code
+- ❌ Database initialization in JFrame
 
-## Versioning and change discipline
+## API Design
+
+- Define public endpoints and schemas before implementing controllers or clients.
+- Use one common structured error model with a stable code, error ID, timestamp, severity, source, and field details.
+- UI guards improve navigation but never replace server-side authorization.
+
+## Security and Isolation
+
+- Enforce authorization in both API and business-service layers.
+- Reject cross-tenant or out-of-scope identifiers before repository access, and scope every repository query by tenant/company as applicable.
+- Record the actor and correlation context for every write.
+- Never store refresh tokens in browser local storage.
+- Keep provider secrets and tokens encrypted at rest and out of configuration files, logs, errors, events, and API responses.
+- Audit authentication events, permission failures, writes, imports, and privileged access.
+
+## Events and Observability
+
+- Emit business events only after the associated transaction succeeds.
+- Event payloads MUST include stable aggregate identity and enough context for audit correlation without leaking secrets.
+- Structured logs SHOULD include tenant ID, correlation ID, actor ID, and event type when permitted, but MUST NOT expose confidential content.
+
+## Versioning and Change Discipline
 
 - `PATCH`: clarification or compatible correction with no new runtime responsibility, schema migration, endpoint, event, or report contract.
 - `MINOR`: backward-compatible behavior or contract addition, including a forward schema extension.
