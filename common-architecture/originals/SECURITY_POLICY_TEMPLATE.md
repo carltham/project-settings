@@ -110,6 +110,68 @@ Permissions:
 
 ---
 
+## Multi-Tenant Architecture Enforcement (MANDATORY)
+
+**[PROJECT_NAME] must enforce strict multi-tenant isolation.**
+
+### Tenant Identifier Strategy
+
+**Tenant scoping method:** [ACCOUNT_ID / COMPANY_ID / WORKSPACE_ID]
+
+Every query and write operation MUST be scoped to tenant:
+
+```sql
+-- ✅ CORRECT: Always include tenant filter
+SELECT * FROM orders WHERE company_id = ? AND order_id = ?
+
+-- ❌ WRONG: Missing tenant filter
+SELECT * FROM orders WHERE order_id = ?
+```
+
+### Cross-Tenant Denial (MANDATORY)
+
+**System must actively REJECT cross-tenant access before database query:**
+
+1. User from Tenant A requests data
+2. System identifies tenant: Tenant A
+3. User requests data with ID from Tenant B
+4. System REJECTS request (403 Forbidden) BEFORE querying database
+5. Never allow queries that could return another tenant's data
+
+**Implementation requirement:**
+```java
+// In Repository layer
+@Override
+public Optional<Order> findById(String orderId, String tenantId) {
+    // MANDATORY: Verify order belongs to tenant
+    Order order = database.getOrder(orderId);
+    if (order == null) {
+        throw new AccessDeniedException();  // Not found = access denied
+    }
+    if (!order.getTenantId().equals(tenantId)) {
+        throw new AccessDeniedException();  // Wrong tenant = access denied
+    }
+    return Optional.of(order);
+}
+```
+
+### Testing Multi-Tenant Security (MANDATORY)
+
+Every data-access test MUST include cross-tenant denial test:
+
+```java
+@Test
+public void userFromTenantA_cannotAccess_TenantB_data() {
+    User userA = createUser(TENANT_A);
+    Order orderB = createOrder(TENANT_B);
+    
+    assertThatThrownBy(() -> service.getOrder(orderB.getId(), userA))
+        .isInstanceOf(AccessDeniedException.class);
+}
+```
+
+---
+
 ## Data Protection
 
 ### Encryption at Rest

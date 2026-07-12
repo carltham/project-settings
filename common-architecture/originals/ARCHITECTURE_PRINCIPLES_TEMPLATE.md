@@ -196,6 +196,189 @@ Custom implementation for same problem       → AVOID
 
 ---
 
+## Mandatory Layering Architecture
+
+**[PROJECT_NAME] uses strict six-tier separation of concerns.**
+
+### Six-Tier Model
+
+```
+Tier 1 (UI):         Swing/AWT components (JFrame, JPanel, JDialog)
+Tier 2 (UI Logic):   UIControllers (HttpClient delegation, state management)
+Tier 3 (API):        REST @RestController (HTTP endpoints, validation)
+Tier 4 (Business):   @Service classes (business logic, rules)
+Tier 5 (Data):       @Repository (persistence, queries)
+Tier 6 (Database):   [DATABASE_TYPE: MySQL, PostgreSQL, etc.]
+```
+
+### Why This Structure?
+
+- **Tier 1 (UI):** Handles rendering and user events only. No business logic.
+- **Tier 2 (UIControllers):** Framework-agnostic state management. Testable without UI.
+- **Tier 3 (API):** HTTP contract layer. Defines endpoints and validation.
+- **Tier 4 (Business):** All business logic and rules centralized. Reusable.
+- **Tier 5 (Data):** ONLY place for database operations. Enforces data isolation.
+- **Tier 6 (Database):** Raw data storage.
+
+### Enforcement Rules (MANDATORY)
+
+Each tier handles ONE responsibility. No tier crosses into another's domain.
+
+**Tier 1 (UI) Requirements:**
+- ✅ Layout, rendering, event handling ONLY
+- ❌ NO business logic, NO database access, NO service instantiation
+- ❌ NEVER import `gs.Application.AppView` (breaks testability)
+- Delegates all logic to Tier 2 (UIControllers)
+
+**Tier 2 (UIControllers) Requirements:**
+- ✅ Framework-agnostic (ZERO Swing/AWT imports, ZERO database imports)
+- ✅ Communicate with Tier 3 via HttpClient for REST calls
+- ✅ Manage state and UI listeners
+- ❌ NO database code, NO service instantiation
+- **Benefit:** Testable without UI framework or database
+
+**Tier 3 (API) Requirements:**
+- ✅ HTTP endpoints and request/response handling
+- ✅ API-level validation
+- ✅ Delegates to Tier 4 (Services)
+- ❌ NO database access, NO direct repository instantiation
+
+**Tier 4 (Business Services) Requirements:**
+- ✅ Business logic, validation, rules
+- ✅ Delegates to Tier 5 (Repositories) via dependency injection
+- ❌ NO database code, NO direct repository creation
+- ✅ Use constructor injection for repository access
+
+**Tier 5 (Repositories) Requirements:**
+- ✅ ALL database operations (SQL, RecordSet, JDBC) ONLY here
+- ✅ Queries, persistence, data access
+- ✅ Tenant scoping enforced in all queries
+- ❌ NO business logic, NO service logic
+
+### Dependency Injection (MANDATORY)
+
+- **Always use constructor-based injection**
+- Never use `new ServiceClass()`, `new RepositoryImpl()`, or `new DatabaseConnection()`
+- Exception: `new DatabaseConnection()` ONLY in @Configuration classes
+- Enables testability and modularity
+
+### Violations (Never Do These)
+
+- ❌ Database code in UI layer
+- ❌ Service instantiation in Swing code
+- ❌ AppView import in Swing classes
+- ❌ Direct database access from Service or API layers
+- ❌ Spring context access from Swing components
+- ❌ PreparedStatement or JDBC in UI code
+
+---
+
+## Audit & Observability Architecture
+
+### Audit Logging (MANDATORY)
+
+Every write operation MUST be audited.
+
+**Record for every write:**
+- Actor: Who triggered the change (user ID, service account)
+- Action: What operation (create, update, delete)
+- Entity: Which object changed (aggregate ID, type)
+- Timestamp: When it happened (UTC)
+- Correlation ID: Link to originating request
+- Tenant: Which tenant owns the data
+
+**Example audit log entry:**
+```
+timestamp: 2026-07-12T10:30:00Z
+actor: user-123
+action: ORDER_CREATED
+entity: order-456
+tenant: tenant-001
+correlationId: req-67890
+details: { total: 99.99, items: 3 }
+```
+
+### Structured Logging Standards
+
+**Log format:** Include when permitted (respect privacy)
+- Tenant ID (identify which customer)
+- Correlation ID (trace requests)
+- Actor ID (who triggered action)
+- Event type (what happened)
+
+**MUST NOT expose:**
+- Secrets, API keys, tokens
+- Personal data (unless required for audit)
+- Passwords, credit cards, SSNs
+
+---
+
+## Events Architecture
+
+**[PROJECT_NAME] uses domain events for state change notifications.**
+
+### Event Emission Rules (MANDATORY)
+
+- **Emit ONLY after successful transaction** (database commit succeeded)
+- **NEVER emit before commit** (would create orphaned events)
+- Events are immutable once emitted
+
+### Event Payload Requirements
+
+**Every event MUST include:**
+- `eventId`: Unique identifier (UUID)
+- `eventType`: Event name (OrderCreated, UserDeleted)
+- `timestamp`: When event occurred (UTC)
+- `aggregateId`: What entity changed (ID only)
+- `aggregateType`: Entity type
+- `tenantId`: Multi-tenant identifier
+- `correlationId`: Link to originating request
+- `actorId`: Who triggered event
+- `version`: Event format version
+
+**NEVER include in events:**
+- Secrets, API keys, tokens
+- Credit card numbers
+- Passwords, PINs
+- Personal identification numbers
+
+### Event Consumers
+
+List which services consume which events and why:
+
+| Event | Consumers | Reason |
+|-------|-----------|--------|
+| [EventName] | [Service1], [Service2] | [Business process] |
+
+---
+
+## Testing Architecture
+
+### Test Determinism (MANDATORY)
+
+Tests MUST produce identical results every run.
+
+**Requirements:**
+- Inject `Clock.fixed()` instead of `System.currentTimeMillis()`
+- Inject seeded random instead of `new Random()`
+- Mock external dependencies: [LIST_EXTERNAL_SERVICES]
+- No execution order dependency
+- No mutable global state
+
+### Cross-Tenant Isolation Tests (MANDATORY)
+
+Every data-access feature MUST include test verifying cross-tenant access is DENIED.
+
+**Test requirement:**
+- User from Tenant A cannot read/write Tenant B data
+- System rejects cross-tenant access before database query
+
+### Secrets Protection Tests (MANDATORY)
+
+Assert secrets do NOT appear in: logs, errors, API responses, audit events
+
+---
+
 ## Architectural Constraints
 
 **Domain:** [PROJECT_DOMAIN]  

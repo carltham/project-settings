@@ -12,6 +12,124 @@ This document defines REST API standards for [PROJECT_NAME]. All APIs must follo
 
 ---
 
+## Schema-First Design (MANDATORY)
+
+**Define API contracts BEFORE implementing controllers or clients.**
+
+### Why Schema-First?
+
+- Clients know what to expect before implementation starts
+- Backend and frontend can work in parallel
+- Changes to API are explicit (breaking vs backward-compatible)
+- Documentation is always in sync with implementation
+
+### Workflow
+
+1. **Design Phase:** Define request/response schemas
+2. **Contract Phase:** API team approves contract
+3. **Implementation Phase:** Backend implements according to schema
+4. **Testing Phase:** Client tests against schema
+5. **Release Phase:** Client and server release together
+
+### Schema Definition
+
+Use OpenAPI/Swagger or JSON Schema to document:
+- Endpoint path and method
+- Request body structure and types
+- Response success structure (200, 201)
+- Response error structure (400, 401, 403, 500)
+- Query parameters and headers
+- Status codes and meanings
+
+---
+
+## Error Model Architecture (MANDATORY)
+
+**All API errors use one consistent structured error format.**
+
+### Error Payload Structure
+
+Every error response MUST include:
+
+```json
+{
+  "code": "INVALID_REQUEST",                    // Stable error code (enum-like)
+  "message": "User-readable error description", // What went wrong
+  "errorId": "err-550e8400-e29b-41d4-a716",   // Unique error ID (UUID)
+  "timestamp": "2026-07-12T10:30:00Z",        // When error occurred (UTC)
+  "severity": "ERROR",                         // ERROR, WARNING, INFO
+  "source": "PaymentService",                  // Which service/component
+  "correlationId": "req-67890",                // Link to request
+  "fieldErrors": [                             // Validation errors (if applicable)
+    {
+      "field": "email",
+      "message": "Invalid email format"
+    },
+    {
+      "field": "password",
+      "message": "Password must be at least 8 characters"
+    }
+  ]
+}
+```
+
+### Error Code Examples
+
+Define standard error codes for your domain:
+
+| Code | HTTP Status | Meaning | Retry? |
+|------|-------------|---------|--------|
+| `INVALID_REQUEST` | 400 | Request malformed/invalid | No |
+| `UNAUTHORIZED` | 401 | No valid credentials | No (unless auth refreshed) |
+| `FORBIDDEN` | 403 | Authenticated but not authorized | No |
+| `NOT_FOUND` | 404 | Resource doesn't exist | No |
+| `CONFLICT` | 409 | Resource state conflict | Maybe |
+| `RATE_LIMITED` | 429 | Too many requests | Yes (with backoff) |
+| `INTERNAL_ERROR` | 500 | Server error | Yes (with backoff) |
+| `SERVICE_UNAVAILABLE` | 503 | Service temporarily down | Yes (with backoff) |
+| [DOMAIN_SPECIFIC_CODES] | [APPROPRIATE_STATUS] | [YOUR_MEANINGS] | [YES/NO] |
+
+### Error Response Examples
+
+**Validation Error:**
+```json
+{
+  "code": "INVALID_REQUEST",
+  "message": "Order validation failed",
+  "errorId": "err-abc123def456",
+  "timestamp": "2026-07-12T10:30:00Z",
+  "severity": "ERROR",
+  "source": "OrderAPI",
+  "correlationId": "req-67890",
+  "fieldErrors": [
+    { "field": "items", "message": "Must have at least 1 item" },
+    { "field": "total", "message": "Must be positive" }
+  ]
+}
+```
+
+**Authorization Error:**
+```json
+{
+  "code": "FORBIDDEN",
+  "message": "You do not have permission to access order from another tenant",
+  "errorId": "err-xyz789uvw456",
+  "timestamp": "2026-07-12T10:30:00Z",
+  "severity": "ERROR",
+  "source": "OrderAPI",
+  "correlationId": "req-67890"
+}
+```
+
+### Benefits
+
+- **Clients know what to expect:** Consistent error format
+- **Debugging:** Error ID + correlation ID = full trace
+- **Monitoring:** Count errors by code and severity
+- **UX:** Users see meaningful messages, not stack traces
+
+---
+
 ## URL Structure
 
 ### Versioning Strategy

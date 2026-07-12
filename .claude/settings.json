@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/DATA/WORKSPACE/project-architecture/originals/**)"
+    ]
+  }
+}

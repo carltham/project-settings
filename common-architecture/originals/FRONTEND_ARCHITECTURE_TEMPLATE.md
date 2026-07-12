@@ -184,6 +184,117 @@ New feature needed?
 
 ---
 
+## UIController Pattern (MANDATORY)
+
+**Frontend uses UIControllers for state management and API delegation.**
+
+### UIController Requirements
+
+UIControllers are the bridge between UI components and backend APIs. They MUST follow strict rules.
+
+**UIController MUST:**
+- ✅ Be framework-agnostic (ZERO [FRAMEWORK_NAME] imports)
+- ✅ Have ZERO database access
+- ✅ Communicate via HttpClient for REST API calls only
+- ✅ Manage local state (forms, selections, pagination)
+- ✅ Handle error responses gracefully
+- ✅ Be injectable (constructor-based)
+- ✅ Be testable without UI or database
+
+**UIController MUST NOT:**
+- ❌ Import UI framework classes ([FRAMEWORK_NAME], Swing, AWT)
+- ❌ Import database libraries (JDBC, JPA, MongoDB driver)
+- ❌ Instantiate services directly (`new ServiceClass()`)
+- ❌ Access configuration or environment directly
+- ❌ Import Spring context or Spring beans
+- ❌ Have UI rendering logic
+
+### Example: Correct UIController
+
+```typescript
+// ✅ CORRECT: Framework-agnostic UIController
+export class CategoryEditorUIController {
+    private readonly httpClient: HttpClient;
+    private categories: CategoryDto[] = [];
+    private currentCategory: CategoryDto | null = null;
+    
+    constructor(httpClient: HttpClient) {
+        this.httpClient = httpClient;
+    }
+    
+    public async loadCategories(): Promise<void> {
+        this.categories = await this.httpClient.get('/api/categories');
+    }
+    
+    public async save(dto: CategoryDto): Promise<void> {
+        const result = await this.httpClient.post('/api/categories', dto);
+        this.currentCategory = result;
+    }
+    
+    public getCategories(): CategoryDto[] {
+        return this.categories;
+    }
+}
+
+// ✅ CORRECT: UI component delegates to UIController
+export class CategoryEditorPanel {
+    private controller: CategoryEditorUIController;
+    
+    constructor(controller: CategoryEditorUIController) {
+        this.controller = controller;
+    }
+    
+    public async onSave(): Promise<void> {
+        const formData = this.getFormData();
+        await this.controller.save(formData);  // Delegates only
+        this.refreshDisplay();
+    }
+}
+```
+
+### Example: Wrong UIController
+
+```typescript
+// ❌ WRONG: Imports UI framework
+import { Component } from '@angular/core';  // NO!
+export class CategoryEditorUIController extends Component { ... }
+
+// ❌ WRONG: Direct database access
+import { getDatabase } from 'firebase';
+public load() {
+    const categories = getDatabase().ref('categories').get();  // NO!
+}
+
+// ❌ WRONG: Creates services directly
+export class CategoryEditorUIController {
+    private service = new CategoryService();  // NO!
+}
+```
+
+### Testing UIControllers
+
+UIControllers are fully testable without UI or database:
+
+```typescript
+@Test
+public async testSaveCategory() {
+    // Mock HttpClient
+    const mockHttp = { post: jest.fn() };
+    const controller = new CategoryEditorUIController(mockHttp);
+    
+    // Test business logic
+    await controller.save({ id: 1, name: 'Electronics' });
+    
+    // Verify API call
+    expect(mockHttp.post).toHaveBeenCalledWith(
+        '/api/categories',
+        { id: 1, name: 'Electronics' }
+    );
+}
+```
+
+---
+
 ## Smart vs Dumb Components
 
 ### Component Architecture
