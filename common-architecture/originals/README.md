@@ -6,23 +6,46 @@
 
 ---
 
+## Integration with Development Standards
+
+**Important:** These templates work in conjunction with [Common Development Rules](../common-AI-rules/development.rules.md). Review both documents:
+
+- **Development Rules** → Language-specific standards, naming conventions, layering principles
+- **Architecture Templates** → System-wide patterns, technology decisions, organizational structure
+
+Key standards referenced:
+- Three-tier architecture pattern (Swing/UI → UIControllers → REST API → Services → Repositories → Database)
+- Framework-agnostic UIControllers
+- Dependency injection over direct instantiation
+- Database logic isolation to Repository layer only
+
+---
+
 ## What's Included
 
 This collection provides generic, project-agnostic templates for essential architecture and operational documentation:
 
 ### Core Architecture Documents
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| **[ARCHITECTURE_PRINCIPLES_TEMPLATE.md](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md)** | Design philosophy, core principles, technology decisions | Everyone |
-| **[API_STANDARDS_TEMPLATE.md](./API_STANDARDS_TEMPLATE.md)** | REST API design guidelines, response formats, standards | Backend & Frontend engineers |
-| **[SECURITY_POLICY_TEMPLATE.md](./SECURITY_POLICY_TEMPLATE.md)** | Security requirements, incident response, compliance | Security, DevOps, All engineers |
+| Document | Purpose | Audience | Size |
+|----------|---------|----------|------|
+| **[ARCHITECTURE_PRINCIPLES_TEMPLATE.md](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md)** | Design philosophy, core principles, technology decisions, evolution roadmap | Everyone | ~23KB |
+| **[API_STANDARDS_TEMPLATE.md](./API_STANDARDS_TEMPLATE.md)** | REST API design, versioning, response formats, error handling | Backend & Frontend engineers | ~13KB |
+| **[SECURITY_POLICY_TEMPLATE.md](./SECURITY_POLICY_TEMPLATE.md)** | Security requirements, incident response, compliance, data protection | Security, DevOps, All engineers | ~16KB |
 
-### Original Reference
+### Platform-Specific Architecture
 
-| Document | Notes |
-|----------|-------|
-| **[originals/ARCHITECTURE_PRINCIPLES.md](./originals/)** | Original ChatGPT Client project version (for reference) |
+| Document | Purpose | Audience | Size |
+|----------|---------|----------|------|
+| **[FRONTEND_ARCHITECTURE_TEMPLATE.md](./FRONTEND_ARCHITECTURE_TEMPLATE.md)** | Frontend patterns, component architecture, state management | Frontend engineers | ~31KB |
+| **[MOBILE_ARCHITECTURE_TEMPLATE.md](./MOBILE_ARCHITECTURE_TEMPLATE.md)** | Mobile-first design, offline-first patterns, device constraints | Mobile engineers | ~24KB |
+| **[STATE_MANAGEMENT_TEMPLATE.md](./STATE_MANAGEMENT_TEMPLATE.md)** | State patterns (Redux, MobX, service-based, Context API) | Frontend engineers | ~24KB |
+
+### Execution & Operations
+
+| Document | Purpose | Audience | Size |
+|----------|---------|----------|------|
+| **[SPRINT_STRATEGY_TEMPLATE.md](./SPRINT_STRATEGY_TEMPLATE.md)** | Sprint planning, task workflow, success metrics, risk management | Scrum masters, team leads | ~6KB |
 
 ---
 
@@ -30,11 +53,12 @@ This collection provides generic, project-agnostic templates for essential archi
 
 ### Quick Start (5 minutes)
 
-1. Copy the templates to your project's `/architecture` or `/docs` folder
-2. Rename by removing `_TEMPLATE` suffix
-3. Replace all `[PLACEHOLDER]` values with your project details
-4. Remove sections that don't apply
-5. Have team review and approve
+1. **Review [Common Development Rules](../common-AI-rules/development.rules.md)** to understand mandatory code patterns
+2. Copy the templates to your project's `/architecture` or `/docs` folder
+3. Rename by removing `_TEMPLATE` suffix
+4. Replace all `[PLACEHOLDER]` values with your project details
+5. Remove sections that don't apply
+6. Have team review and approve
 
 ### Detailed Customization (30 minutes)
 
@@ -76,10 +100,12 @@ This collection provides generic, project-agnostic templates for essential archi
 
 ### ARCHITECTURE_PRINCIPLES_TEMPLATE.md
 
+Strategic architecture decisions and design philosophy.
+
 **Sections:**
 ```
 1. How to Use This Template      (Instructions)
-2. Core Principles               (8 core architectural principles)
+2. Core Principles               (8+ architectural principles)
 3. Architectural Constraints     (Domain-specific constraints)
 4. Non-Functional Requirements   (Performance, reliability, security, scalability)
 5. Technology Decisions          (Backend, frontend, mobile, DevOps)
@@ -95,21 +121,24 @@ This collection provides generic, project-agnostic templates for essential archi
 15. Customization Checklist     (19-point checklist)
 ```
 
-**Customize:**
-- All `[PRINCIPLE_NAME]` placeholders
-- Performance targets (Section 4)
-- Technology stack (Section 5)
-- Phases and timelines (Section 12)
-- Team roles (Section 13)
+**Key Customizations:**
+- Core principles for your domain
+- Performance targets (latency, throughput)
+- Technology stack choices and justification
+- Phased evolution roadmap
+- Team roles and accountability
+- **Connect to:** Development rules for code-level enforcement of principles
 
 ---
 
 ### API_STANDARDS_TEMPLATE.md
 
+REST API contract between backend and frontend/mobile clients.
+
 **Sections:**
 ```
 1. URL Structure              (Versioning, naming, conventions)
-2. HTTP Methods              (GET, POST, PUT, PATCH, DELETE)
+2. HTTP Methods              (GET, POST, PUT, PATCH, DELETE semantics)
 3. Request Format            (Headers, body, query params)
 4. Response Format           (Success & error structures)
 5. HTTP Status Codes         (When to use each)
@@ -123,16 +152,20 @@ This collection provides generic, project-agnostic templates for essential archi
 13. Quick Reference         (Do's and don'ts)
 ```
 
-**Customize:**
-- Base URLs (Development, staging, production)
+**Key Customizations:**
+- Base URLs (development, staging, production)
+- API versioning strategy (URL path, header, or query param)
 - Naming conventions for your domain
-- Required headers and authentication
-- Error codes specific to your APIs
-- Rate limiting policies
+- Required headers and authentication method
+- Error codes specific to your domain
+- Rate limiting and quota policies
+- **Connect to:** Development rules for REST @RestController layer
 
 ---
 
 ### SECURITY_POLICY_TEMPLATE.md
+
+Security requirements, threat model, and incident response procedures.
 
 **Sections:**
 ```
@@ -141,13 +174,13 @@ This collection provides generic, project-agnostic templates for essential archi
 3. Authentication & Authorization (Methods, tokens, permissions)
 4. Data Protection            (Encryption, classification, retention)
 5. Input Validation & Output Encoding (Prevent injection attacks)
-6. Common Vulnerabilities     (SQL injection, XSS, CSRF, etc.)
+6. Common Vulnerabilities     (SQL injection, XSS, CSRF, OWASP Top 10)
 7. Secrets Management         (Where, rotation, redaction)
 8. Security Testing          (SAST, DAST, penetration testing)
 9. Access Control            (Development, production)
 10. Third-Party Security     (Vendors, dependencies)
 11. Compliance               (Standards, verification)
-12. Incident Response Plan   (Classification, timeline, post-incident)
+12. Incident Response Plan   (P1-P4 classification, timeline, post-incident)
 13. Security Training        (Requirements, topics)
 14. Security Checklist       (15-point pre-deploy checklist)
 15. Security Headers         (Required HTTP headers)
@@ -155,13 +188,51 @@ This collection provides generic, project-agnostic templates for essential archi
 17. Quick Reference          (Do's and don'ts)
 ```
 
-**Customize:**
-- Incident response contact info
-- Encryption standards for your data
-- Compliance requirements (GDPR, HIPAA, etc.)
-- Authentication method (JWT, OAuth, SAML)
+**Key Customizations:**
+- Incident response contact info and escalation
+- Encryption standards (algorithms, key rotation)
+- Compliance requirements (GDPR, HIPAA, SOC2, etc.)
+- Authentication method (JWT, OAuth, SAML, OIDC)
 - Access control model (RBAC, ABAC)
-- Alert thresholds and escalation
+- Alert thresholds and escalation procedures
+- **Connect to:** Development rules for Repository layer isolation and input validation
+
+---
+
+## Integration with Development Rules
+
+The [Common Development Rules](../common-AI-rules/development.rules.md) define **mandatory code-level patterns** that enforce the architecture decisions documented in these templates:
+
+### How They Work Together
+
+**Architecture Templates** (Strategy)
+↓
+**Development Rules** (Enforcement)
+↓
+**Code Implementation**
+
+### Key Alignment Points
+
+| Architecture Decision | Development Rule | Purpose |
+|---|---|---|
+| Three-tier separation | Tier definitions & isolation rules | Enforces layer separation in code |
+| Framework-agnostic UI | No AppView in Swing classes | Prevents UI coupling to infrastructure |
+| Business logic in backend | Database logic isolation to Repository | Prevents mixing concerns across layers |
+| Dependency injection | DI over direct instantiation | Ensures testability and modularity |
+| REST API layer | @RestController, HTTP semantics | Contracts API layer behavior |
+| No direct database access | Repositories only in data layer | Enforces data access isolation |
+| Configuration classes | Infrastructure bootstrap only | Prevents framework concerns in UI |
+
+### Review Both Documents
+
+1. **Start with Architecture Templates** to understand *why* a decision was made
+2. **Review Development Rules** to see *how* to enforce it in code
+3. **Implement using Code patterns** from the rules
+
+Example: Three-Tier Architecture
+- **Template says:** Separate UI, UIControllers, REST API, Services, Repositories
+- **Rule says:** UIControllers must not import Swing, Services must use repositories, no database in UI layer
+- **Code implements:** Specific class structure, imports, and method signatures
 
 ---
 
@@ -353,8 +424,8 @@ sed -i 's/\[TECH_STACK\]/Java, Spring Boot, PostgreSQL/g' *.md
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | 2026-07-12 | Initial templates created |
-| [Future] | [Date] | [Changes] |
+| 1.1 | 2026-07-12 | Added integration with Development Rules; clarified platform-specific templates; enhanced section descriptions |
+| 1.0 | 2026-07-12 | Initial templates created (ARCHITECTURE_PRINCIPLES, API_STANDARDS, SECURITY_POLICY, FRONTEND_ARCHITECTURE, MOBILE_ARCHITECTURE, STATE_MANAGEMENT, SPRINT_STRATEGY) |
 
 ---
 
@@ -371,18 +442,24 @@ These templates are living documents. If you improve them:
 
 ## Quick Links
 
-**Inside this directory:**
-- [`ARCHITECTURE_PRINCIPLES_TEMPLATE.md`](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — Main template (550+ lines)
-- [`API_STANDARDS_TEMPLATE.md`](./API_STANDARDS_TEMPLATE.md) — API guidelines (400+ lines)
-- [`SECURITY_POLICY_TEMPLATE.md`](./SECURITY_POLICY_TEMPLATE.md) — Security requirements (500+ lines)
-- [`originals/`](./originals/) — Original project version (for reference)
+**Companion Documents:**
+- [**Common Development Rules**](../common-AI-rules/development.rules.md) — Code-level standards and patterns (Java, architecture, naming, security)
 
-**External resources:**
-- [OWASP Top 10](https://owasp.org/Top10/)
-- [REST API Best Practices](https://restfulapi.net/)
-- [The Twelve Factor App](https://12factor.net/)
-- [Google Cloud Best Practices](https://cloud.google.com/docs)
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
+**Inside this directory:**
+- [`ARCHITECTURE_PRINCIPLES_TEMPLATE.md`](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design & philosophy (~23KB)
+- [`API_STANDARDS_TEMPLATE.md`](./API_STANDARDS_TEMPLATE.md) — REST API guidelines (~13KB)
+- [`SECURITY_POLICY_TEMPLATE.md`](./SECURITY_POLICY_TEMPLATE.md) — Security & compliance (~16KB)
+- [`FRONTEND_ARCHITECTURE_TEMPLATE.md`](./FRONTEND_ARCHITECTURE_TEMPLATE.md) — Frontend patterns (~31KB)
+- [`MOBILE_ARCHITECTURE_TEMPLATE.md`](./MOBILE_ARCHITECTURE_TEMPLATE.md) — Mobile-first design (~24KB)
+- [`STATE_MANAGEMENT_TEMPLATE.md`](./STATE_MANAGEMENT_TEMPLATE.md) — State patterns (~24KB)
+- [`SPRINT_STRATEGY_TEMPLATE.md`](./SPRINT_STRATEGY_TEMPLATE.md) — Sprint execution (~6KB)
+
+**External Resources:**
+- [OWASP Top 10](https://owasp.org/Top10/) — Common security vulnerabilities
+- [REST API Best Practices](https://restfulapi.net/) — RESTful design principles
+- [The Twelve Factor App](https://12factor.net/) — Cloud-native architecture
+- [Google Cloud Best Practices](https://cloud.google.com/docs) — Infrastructure patterns
+- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/) — System design principles
 
 ---
 
