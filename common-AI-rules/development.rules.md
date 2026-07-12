@@ -72,6 +72,172 @@ All class names must use correct spelling. Common misspellings to avoid: "Supply
 - Correct: `SupplierManagementPanel`, `ReceiptDocument`, `VerificationHandler`
 - Never: `SupplyerPanel`, `RecieptPrinter`, `VerifiyHandler`
 
+### Rule 9: File Name Must Match Public Class Name - MANDATORY
+Each Java file must be named exactly after its public class (case-sensitive). This is a Java Language Specification requirement.
+- Correct: File `GSPosApplicationFrame.java` contains `public class GSPosApplicationFrame`
+- Never: File `MainFrame.java` containing `public class GSPosApplicationFrame`
+- Impact: Improves IDE support, code discoverability, and developer experience
+
+## Architecture and Layering Standards
+
+### Three-Tier Architecture Pattern - MANDATORY
+All applications must follow strict three-tier separation: **Swing/UI → UIControllers → REST API → Services → Repositories → Database**
+
+```
+Tier 1 (UI):         Swing/AWT components (JFrame, JPanel, JDialog)
+Tier 2 (UI Logic):   UIControllers (HttpClient delegation, state management)
+Tier 3 (API):        REST @RestController (HTTP endpoints, validation)
+Tier 4 (Business):   @Service classes (business logic, rules)
+Tier 5 (Data):       @Repository (persistence, queries)
+Tier 6 (Database):   MySQL, PostgreSQL, etc.
+```
+
+**Rules**:
+- Swing classes ONLY handle UI concerns (layout, rendering, events)
+- UIControllers handle state management and delegate via HttpClient
+- Services handle business logic and validation
+- Repositories handle data persistence
+- NO database connections in UI layer
+- NO service instantiation in UI layer
+- NO Spring context access from Swing components
+
+### Rule: No AppView in Swing Classes - MANDATORY
+Swing/AWT classes must NOT import or use `gs.Application.AppView`. This couples UI to application infrastructure and breaks testability.
+
+**Correct Pattern**:
+```java
+// ✅ CORRECT: Framework-agnostic UIController
+public class CategoryEditorUIController implements EditorUIController {
+    private HttpClient httpClient;
+    
+    public CategoryEditorUIController(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+    
+    public void save(CategoryDto dto) {
+        httpClient.post("/api/categories", dto, CategoryDto.class);
+    }
+}
+
+// ✅ CORRECT: Swing class delegates to controller
+public class CategoryEditorPanel extends JPanel {
+    private CategoryEditorUIController controller;
+    
+    public CategoryEditorPanel(CategoryEditorUIController controller) {
+        this.controller = controller;
+    }
+    
+    private void onSave() {
+        controller.save(getFormData());  // Delegates to controller
+    }
+}
+```
+
+**Violations**:
+- Never: `private AppView m_App;` in Swing classes
+- Never: `m_App.getRepository()` in panels
+- Never: `m_App.getService()` in dialogs
+- Never: Direct repository access from UI layer
+
+### Rule: Framework-Agnostic UIControllers - MANDATORY
+UIControllers must have ZERO Swing/AWT imports and ZERO direct database access.
+
+**Correct**:
+- UIController imports: Only DTOs, interfaces, standard Java
+- Communication: HttpClient for REST API calls
+- State: In-memory fields, listeners for UI updates
+- NO database code
+- NO Swing dependencies
+- NO direct service instantiation
+
+**Testing Benefit**: UIControllers can be tested without UI framework or database
+
+### Rule: Dependency Injection Over Direct Instantiation - MANDATORY
+Use constructor-based dependency injection. Never use `new ServiceClass()`.
+
+**Correct Pattern**:
+```java
+// ✅ CORRECT: Constructor injection
+@Service
+public class CategoryService {
+    private final ICategoryRepository repository;
+    
+    @Autowired
+    public CategoryService(ICategoryRepository repository) {
+        this.repository = repository;
+    }
+}
+
+// ✅ CORRECT: Interface dependency
+public class CategoryEditorUIController {
+    private final HttpClient httpClient;  // Injected
+    
+    public CategoryEditorUIController(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+}
+```
+
+**Violations**:
+- Never: `new CategoryService()` in Swing code
+- Never: `new RepositoryImpl()` anywhere
+- Never: `new DatabaseConnection()` outside config
+
+### Rule: Database Logic Isolation - MANDATORY
+All database operations (SQL, RecordSet, JDBC) must be in Repository layer only.
+
+**Correct**:
+```java
+// ✅ IN REPOSITORY LAYER
+@Repository
+public class CategoryRepository implements ICategoryRepository {
+    public List<CategoryDto> findAll() {
+        // Database query here
+    }
+}
+
+// ✅ IN SERVICE LAYER
+@Service
+public class CategoryService {
+    public List<CategoryDto> getCategories() {
+        return repository.findAll();  // Delegates to repository
+    }
+}
+```
+
+**Violations**:
+- Never: `executeQuery()` in Swing panels
+- Never: `PreparedStatement` in UI code
+- Never: `ResultSet` processing in dialogs
+- Never: JDBC code outside Repository
+
+### Rule: Configuration Classes for Infrastructure - MANDATORY
+Database connections, Spring context, and application bootstrap logic belong in configuration classes, NOT in UI.
+
+**Correct Pattern**:
+```java
+// ✅ CONFIGURATION CLASS
+@Configuration
+public class DatabaseConfiguration {
+    @Bean
+    public DatabaseConnection databaseConnection() {
+        // Database setup here
+        return new DatabaseConnection(...);
+    }
+}
+
+// ✅ UI LAYER (No database concerns)
+public class PointOfSalesApplicationFrame extends JFrame {
+    // Only UI concerns here
+    // No database, no Spring context, no AppView
+}
+```
+
+**Violations**:
+- Never: Database initialization in JFrame
+- Never: Spring ApplicationContext in Swing
+- Never: DatabaseConnection creation in panels
+
 ## Versioning and change discipline
 
 - `PATCH`: clarification or compatible correction with no new runtime responsibility, schema migration, endpoint, event, or report contract.
