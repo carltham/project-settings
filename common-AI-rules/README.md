@@ -10,11 +10,11 @@ Comprehensive AI-friendly guidelines for development standards, testing practice
 
 This directory contains three complementary rule sets:
 
-1. **Development Rules** — Code standards, architecture patterns, naming conventions
+1. **Development Rules** — Code standards, architecture patterns, naming conventions, **document organization** (MANDATORY)
 2. **Testing Rules** — Test structure, quality, data safety, Java-specific patterns
 3. **Commands Rules** — AI command execution, logging, source protection, safety practices
 
-Together, they define how code is written, tested, built, and the operational practices for maintaining consistency and safety.
+Together, they define how code is written, tested, built, documented, and the operational practices for maintaining consistency and safety.
 
 ---
 
@@ -29,6 +29,22 @@ Together, they define how code is written, tested, built, and the operational pr
 **Audience:** All developers, architects, code reviewers, AI assistants
 
 **Contents:**
+
+#### Git & Automation Safety (MANDATORY)
+
+**AI Commits** — CRITICAL SAFETY RULE
+- **AI MUST NEVER commit unless explicitly asked to do so**
+- Never commit as part of task completion
+- Never assume changes should be committed
+- Wait for explicit user instruction: "commit these changes", "make a commit", etc.
+- User retains full control over when changes persist to git
+
+**Commit Message Format** (MANDATORY)
+- Short: ~10 rows maximum
+- Copyable: Plain text format for direct pasting
+- Scope: Summarize changes since last commit
+- Structure: Subject + details + Co-Authored-By footer
+- Delivery: Ready-to-use format, no markdown formatting of message text
 
 #### Java Standards
 - **Class Naming (Rule 8)**
@@ -89,8 +105,28 @@ Tier 6 (Database):   MySQL, PostgreSQL, etc.
 - Spring context initialization separate
 - Application bootstrap logic isolated from UI
 
-**Size:** ~23KB
-**Last Updated:** 2026-07-12
+#### Document Organization and Structure (MANDATORY)
+
+All projects MUST follow strict folder organization for documentation:
+
+**Architecture Documents**
+- Location: `/architecture` folder in project root
+- All system design, patterns, API design, database schema documentation
+- Must have `/architecture/README.md` index
+
+**Planning Documents**
+- Location: `/planning` folder in project root
+- All sprints, tickets, roadmap, requirements
+- Sub-folders: `/planning/sprints/`, `/planning/tickets/`
+- Must have `/planning/README.md` index
+
+**Violations:**
+- ❌ Architecture docs scattered in root or source folders
+- ❌ Planning docs mixed with code directories
+- ❌ Undocumented decisions
+
+**Size:** ~28KB
+**Last Updated:** 2026-07-13
 
 ---
 
