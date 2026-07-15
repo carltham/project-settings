@@ -1,5 +1,11 @@
 # Common User Command History Rules
 
+## CRITICAL rules
+
+🚫 STOP: FORBIDDEN TO GIT COMMIT UNLESS EXPLICITLY ASKED 🚫
+
+🚫 STOP: FORBIDDEN TO EVER GIT PUSH UNLESS EXPLICITLY ASKED 🚫
+
 ## Logging order
 
 - **Before starting any job**, log the user's command in `logs/commands.log.md` in the local project, then begin the work.

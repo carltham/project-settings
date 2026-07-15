@@ -9,7 +9,7 @@ Centralized repository for **development standards**, **architecture guidelines*
 ## Quick Navigation
 
 - **Need code-level standards?** → See [Common Development Rules](#common-development-rules)
-- **Need architecture templates?** → See [Common Architecture Templates](#common-architecture-templates)
+- **Need architecture templates?** → See [Common Architecture Templates](#common/architecture-templates)
 - **Setting up a new project?** → See [Global Rules & Local Extensions](#global-rules--local-extensions)
 - **Extending rules for your project?** → See [Creating Local Rules for Your Project](#creating-local-rules-for-your-project)
 - **AI Assistants:** Read [Global Rules & Local Extensions](#global-rules--local-extensions) first
@@ -22,10 +22,10 @@ Centralized repository for **development standards**, **architecture guidelines*
 ```
 project-settings/
 ├── README.md                          (This file - project overview)
-├── common-AI-rules/
+├── common/AI-rules/
 │   ├── development.rules.md           (Mandatory code standards)
 │   └── [language-specific rules]      (Language conventions)
-└── common-architecture/
+└── common/architecture/
     └── originals/
         ├── ARCHITECTURE_PRINCIPLES_TEMPLATE.md
         ├── API_STANDARDS_TEMPLATE.md
@@ -41,7 +41,7 @@ project-settings/
 
 ## Common Development Rules
 
-**Location:** [`common-AI-rules/development.rules.md`](./common-AI-rules/development.rules.md)
+**Location:** [`common/AI-rules/development.rules.md`](./common/AI-rules/development.rules.md)
 
 **Purpose:** Mandatory code-level standards, architecture patterns, security requirements, and best practices
 
@@ -336,7 +336,7 @@ public class PointOfSalesApplicationFrame extends JFrame {
 
 ## Commands & Execution Rules
 
-**Location:** [`common-AI-rules/commands.rules.md`](./common-AI-rules/commands.rules.md)
+**Location:** [`common/AI-rules/commands.rules.md`](./common/AI-rules/commands.rules.md)
 
 **Purpose:** Operational safety, command logging, source protection, and credential handling for all automation and AI-assisted development
 
@@ -472,7 +472,7 @@ cp originals/file.md myproject/file.md  # Copy to destination
 
 ## Testing Rules
 
-**Location:** [`common-AI-rules/testing-rules.md`](./common-AI-rules/testing-rules.md)
+**Location:** [`common/AI-rules/testing-rules.md`](./common/AI-rules/testing-rules.md)
 
 **Purpose:** Testing standards, quality gates, and Java-specific test configuration
 
@@ -714,7 +714,7 @@ public void apiResponse_doesNotExpose_secrets() {
 
 ## Common Architecture Templates
 
-**Location:** [`common-architecture/originals/`](./common-architecture/originals/)
+**Location:** [`common/architecture/originals/`](./common/architecture/originals/)
 
 **Purpose:** Reusable, customizable architecture documentation templates for system-wide patterns and organizational structure
 
@@ -728,9 +728,9 @@ public void apiResponse_doesNotExpose_secrets() {
 
 | Template | Purpose | Audience | Size |
 |----------|---------|----------|------|
-| **[ARCHITECTURE_PRINCIPLES_TEMPLATE.md](./common-architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md)** | Design philosophy, core principles, technology decisions, evolution roadmap | Everyone | ~23KB |
-| **[API_STANDARDS_TEMPLATE.md](./common-architecture/originals/API_STANDARDS_TEMPLATE.md)** | REST API design, versioning, response formats, error handling | Backend & Frontend engineers | ~13KB |
-| **[SECURITY_POLICY_TEMPLATE.md](./common-architecture/originals/SECURITY_POLICY_TEMPLATE.md)** | Security requirements, incident response, compliance, data protection | Security, DevOps, All engineers | ~16KB |
+| **[ARCHITECTURE_PRINCIPLES_TEMPLATE.md](./common/architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md)** | Design philosophy, core principles, technology decisions, evolution roadmap | Everyone | ~23KB |
+| **[API_STANDARDS_TEMPLATE.md](./common/architecture/originals/API_STANDARDS_TEMPLATE.md)** | REST API design, versioning, response formats, error handling | Backend & Frontend engineers | ~13KB |
+| **[SECURITY_POLICY_TEMPLATE.md](./common/architecture/originals/SECURITY_POLICY_TEMPLATE.md)** | Security requirements, incident response, compliance, data protection | Security, DevOps, All engineers | ~16KB |
 
 **ARCHITECTURE_PRINCIPLES_TEMPLATE.md**
 - 8+ core architectural principles
@@ -776,9 +776,9 @@ public void apiResponse_doesNotExpose_secrets() {
 
 | Template | Purpose | Audience | Size |
 |----------|---------|----------|------|
-| **[FRONTEND_ARCHITECTURE_TEMPLATE.md](./common-architecture/originals/FRONTEND_ARCHITECTURE_TEMPLATE.md)** | Frontend patterns, component architecture, state management | Frontend engineers | ~31KB |
-| **[MOBILE_ARCHITECTURE_TEMPLATE.md](./common-architecture/originals/MOBILE_ARCHITECTURE_TEMPLATE.md)** | Mobile-first design, offline-first patterns, device constraints | Mobile engineers | ~24KB |
-| **[STATE_MANAGEMENT_TEMPLATE.md](./common-architecture/originals/STATE_MANAGEMENT_TEMPLATE.md)** | State patterns (Redux, MobX, service-based, Context API) | Frontend engineers | ~24KB |
+| **[FRONTEND_ARCHITECTURE_TEMPLATE.md](./common/architecture/originals/FRONTEND_ARCHITECTURE_TEMPLATE.md)** | Frontend patterns, component architecture, state management | Frontend engineers | ~31KB |
+| **[MOBILE_ARCHITECTURE_TEMPLATE.md](./common/architecture/originals/MOBILE_ARCHITECTURE_TEMPLATE.md)** | Mobile-first design, offline-first patterns, device constraints | Mobile engineers | ~24KB |
+| **[STATE_MANAGEMENT_TEMPLATE.md](./common/architecture/originals/STATE_MANAGEMENT_TEMPLATE.md)** | State patterns (Redux, MobX, service-based, Context API) | Frontend engineers | ~24KB |
 
 **FRONTEND_ARCHITECTURE_TEMPLATE.md**
 - "Dumb Terminal" principle — frontend is presentation-only
@@ -819,8 +819,8 @@ public void apiResponse_doesNotExpose_secrets() {
 
 | Template | Purpose | Audience | Size |
 |----------|---------|----------|------|
-| **[TESTING_STANDARDS_TEMPLATE.md](./common-architecture/originals/TESTING_STANDARDS_TEMPLATE.md)** | Testing strategy, determinism, isolation, cross-tenant tests, coverage targets | QA engineers, developers | ~14KB |
-| **[EVENTS_ARCHITECTURE_TEMPLATE.md](./common-architecture/originals/EVENTS_ARCHITECTURE_TEMPLATE.md)** | Event-driven patterns, emission rules, payload structure, consumers, idempotency | Backend engineers | ~15KB |
+| **[TESTING_STANDARDS_TEMPLATE.md](./common/architecture/originals/TESTING_STANDARDS_TEMPLATE.md)** | Testing strategy, determinism, isolation, cross-tenant tests, coverage targets | QA engineers, developers | ~14KB |
+| **[EVENTS_ARCHITECTURE_TEMPLATE.md](./common/architecture/originals/EVENTS_ARCHITECTURE_TEMPLATE.md)** | Event-driven patterns, emission rules, payload structure, consumers, idempotency | Backend engineers | ~15KB |
 
 **TESTING_STANDARDS_TEMPLATE.md**
 - Testing philosophy and tier-specific strategies
@@ -848,7 +848,7 @@ public void apiResponse_doesNotExpose_secrets() {
 
 | Template | Purpose | Audience | Size |
 |----------|---------|----------|------|
-| **[SPRINT_STRATEGY_TEMPLATE.md](./common-architecture/originals/SPRINT_STRATEGY_TEMPLATE.md)** | Sprint planning, task workflow, success metrics, risk management | Scrum masters, team leads | ~6KB |
+| **[SPRINT_STRATEGY_TEMPLATE.md](./common/architecture/originals/SPRINT_STRATEGY_TEMPLATE.md)** | Sprint planning, task workflow, success metrics, risk management | Scrum masters, team leads | ~6KB |
 
 **SPRINT_STRATEGY_TEMPLATE.md**
 - Sprint cycle and duration
@@ -865,12 +865,12 @@ public void apiResponse_doesNotExpose_secrets() {
 
 | File | Purpose |
 |------|---------|
-| **[README.md](./common-architecture/originals/README.md)** | Guide to using architecture templates |
+| **[README.md](./common/architecture/originals/README.md)** | Guide to using architecture templates |
 
 ### Template Usage Guidelines
 
 **Quick Start (5 minutes):**
-1. Review [Common Development Rules](./common-AI-rules/development.rules.md) for code enforcement
+1. Review [Common Development Rules](./common/AI-rules/development.rules.md) for code enforcement
 2. Copy template to your project's `/architecture` or `/docs` folder
 3. Remove `_TEMPLATE` suffix from filename
 4. Replace `[PLACEHOLDER]` values with your project details
@@ -1069,13 +1069,13 @@ Every payment operation requires:
 # [PROJECT_NAME] Local Rules
 
 This project uses:
-1. **Global Rules** from [project-settings/common-AI-rules/](../../project-settings/common-AI-rules/)
+1. **Global Rules** from [project-settings/common/AI-rules/](../../project-settings/common/AI-rules/)
 2. **Local Extensions** in this directory
 
 ## For AI Assistants
 
 When working on this project:
-1. Read GLOBAL rules first: [development.rules.md](../../project-settings/common-AI-rules/development.rules.md)
+1. Read GLOBAL rules first: [development.rules.md](../../project-settings/common/AI-rules/development.rules.md)
 2. Read LOCAL extensions: [development-extensions.md](./development-extensions.md)
 3. FOLLOW BOTH (local rules extend, not replace, global rules)
 
@@ -1136,12 +1136,12 @@ AI implements following BOTH global + local rules
 ### For a New Project
 
 1. **Review Development Standards**
-   - Read [`common-AI-rules/development.rules.md`](./common-AI-rules/development.rules.md)
+   - Read [`common/AI-rules/development.rules.md`](./common/AI-rules/development.rules.md)
    - Understand mandatory architecture patterns
    - Note language-specific conventions
 
 2. **Choose Architecture Templates**
-   - Start with [ARCHITECTURE_PRINCIPLES_TEMPLATE](./common-architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md) for overall design
+   - Start with [ARCHITECTURE_PRINCIPLES_TEMPLATE](./common/architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md) for overall design
    - Add platform-specific templates (FRONTEND_ARCHITECTURE, MOBILE_ARCHITECTURE, etc.)
    - Include API_STANDARDS and SECURITY_POLICY
 
@@ -1195,17 +1195,17 @@ AI implements following BOTH global + local rules
 ## Quick Links
 
 **Development Standards:**
-- [Common Development Rules](./common-AI-rules/development.rules.md) — Mandatory code standards (Java, architecture, naming, security)
+- [Common Development Rules](./common/AI-rules/development.rules.md) — Mandatory code standards (Java, architecture, naming, security)
 
 **Architecture Templates:**
-- [ARCHITECTURE_PRINCIPLES_TEMPLATE](./common-architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design (~23KB)
-- [API_STANDARDS_TEMPLATE](./common-architecture/originals/API_STANDARDS_TEMPLATE.md) — REST API guidelines (~13KB)
-- [SECURITY_POLICY_TEMPLATE](./common-architecture/originals/SECURITY_POLICY_TEMPLATE.md) — Security requirements (~16KB)
-- [FRONTEND_ARCHITECTURE_TEMPLATE](./common-architecture/originals/FRONTEND_ARCHITECTURE_TEMPLATE.md) — Frontend patterns (~31KB)
-- [MOBILE_ARCHITECTURE_TEMPLATE](./common-architecture/originals/MOBILE_ARCHITECTURE_TEMPLATE.md) — Mobile design (~24KB)
-- [STATE_MANAGEMENT_TEMPLATE](./common-architecture/originals/STATE_MANAGEMENT_TEMPLATE.md) — State patterns (~24KB)
-- [SPRINT_STRATEGY_TEMPLATE](./common-architecture/originals/SPRINT_STRATEGY_TEMPLATE.md) — Sprint execution (~6KB)
-- [Architecture Templates Guide](./common-architecture/originals/README.md) — How to use templates
+- [ARCHITECTURE_PRINCIPLES_TEMPLATE](./common/architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design (~23KB)
+- [API_STANDARDS_TEMPLATE](./common/architecture/originals/API_STANDARDS_TEMPLATE.md) — REST API guidelines (~13KB)
+- [SECURITY_POLICY_TEMPLATE](./common/architecture/originals/SECURITY_POLICY_TEMPLATE.md) — Security requirements (~16KB)
+- [FRONTEND_ARCHITECTURE_TEMPLATE](./common/architecture/originals/FRONTEND_ARCHITECTURE_TEMPLATE.md) — Frontend patterns (~31KB)
+- [MOBILE_ARCHITECTURE_TEMPLATE](./common/architecture/originals/MOBILE_ARCHITECTURE_TEMPLATE.md) — Mobile design (~24KB)
+- [STATE_MANAGEMENT_TEMPLATE](./common/architecture/originals/STATE_MANAGEMENT_TEMPLATE.md) — State patterns (~24KB)
+- [SPRINT_STRATEGY_TEMPLATE](./common/architecture/originals/SPRINT_STRATEGY_TEMPLATE.md) — Sprint execution (~6KB)
+- [Architecture Templates Guide](./common/architecture/originals/README.md) — How to use templates
 
 **External Resources:**
 - [OWASP Top 10](https://owasp.org/Top10/) — Common security vulnerabilities
@@ -1228,7 +1228,7 @@ A: Yes! Templates are meant to be customized. Copy them to your project, replace
 A: Quarterly for architecture, annually comprehensive. Update immediately when major decisions change.
 
 **Q: Do development rules apply to all languages?**  
-A: Development rules currently focus on Java and architecture patterns. Language-specific rules may be added to `common-AI-rules/`.
+A: Development rules currently focus on Java and architecture patterns. Language-specific rules may be added to `common/AI-rules/`.
 
 **Q: What if we need to violate a development rule?**  
 A: Document the exception with justification. Have it reviewed and approved by technical leads. Update the rules if it represents a legitimate pattern.

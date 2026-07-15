@@ -8,7 +8,7 @@
 
 ## Integration with Development Standards
 
-**Important:** These templates work in conjunction with [Common Development Rules](../common-AI-rules/development.rules.md). Review both documents:
+**Important:** These templates work in conjunction with [Common Development Rules](../common/AI-rules/development.rules.md). Review both documents:
 
 - **Development Rules** → Language-specific standards, naming conventions, layering principles
 - **Architecture Templates** → System-wide patterns, technology decisions, organizational structure
@@ -60,7 +60,7 @@ This collection provides generic, project-agnostic templates for essential archi
 
 ### Quick Start (5 minutes)
 
-1. **Review [Common Development Rules](../common-AI-rules/development.rules.md)** to understand mandatory code patterns
+1. **Review [Common Development Rules](../common/AI-rules/development.rules.md)** to understand mandatory code patterns
 2. Copy the templates to your project's `/architecture` or `/docs` folder
 3. Rename by removing `_TEMPLATE` suffix
 4. Replace all `[PLACEHOLDER]` values with your project details
@@ -259,7 +259,7 @@ Event-driven patterns and async messaging.
 
 ## Integration with Development Rules
 
-The [Common Development Rules](../common-AI-rules/development.rules.md) define **mandatory code-level patterns** that enforce the architecture decisions documented in these templates:
+The [Common Development Rules](../common/AI-rules/development.rules.md) define **mandatory code-level patterns** that enforce the architecture decisions documented in these templates:
 
 ### How They Work Together
 
@@ -501,7 +501,7 @@ These templates are living documents. If you improve them:
 ## Quick Links
 
 **Companion Documents:**
-- [**Common Development Rules**](../common-AI-rules/development.rules.md) — Code-level standards and patterns (Java, architecture, naming, security)
+- [**Common Development Rules**](../common/AI-rules/development.rules.md) — Code-level standards and patterns (Java, architecture, naming, security)
 
 **Core Architecture:**
 - [`ARCHITECTURE_PRINCIPLES_TEMPLATE.md`](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design, layering, audit (~31KB)

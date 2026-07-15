@@ -343,7 +343,7 @@ All projects MUST follow strict folder organization for documentation:
 
 ## Integration with Architecture Templates
 
-These rules complement architecture templates in `common-architecture/`:
+These rules complement architecture templates in `common/architecture/`:
 
 | Document | How It Uses Rules |
 |---|---|
