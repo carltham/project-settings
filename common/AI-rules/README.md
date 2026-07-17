@@ -17,6 +17,7 @@
 - **Full Documentation** → [`originals/README.md`](./originals/README.md)
 
 ### Language-Specific Extensions (Optional per tech stack)
+- **Java** → [`language-extensions/java-rules-template.md`](./language-extensions/java-rules-template.md)
 - **C++** → [`language-extensions/cpp-rules-template.md`](./language-extensions/cpp-rules-template.md)
 - **TypeScript/Node.js** → [`language-extensions/typescript-node-rules-template.md`](./language-extensions/typescript-node-rules-template.md)
 - **Angular** → [`language-extensions/angular-rules-template.md`](./language-extensions/angular-rules-template.md)

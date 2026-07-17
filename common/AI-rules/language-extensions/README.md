@@ -35,14 +35,22 @@ Optional language-specific extensions to global baseline AI rules.
 
 ### Language-Specific Rules
 
-1. **cpp-rules-template.md** — C++ Mandatory Rules
+1. **java-rules-template.md** — Java Mandatory Rules
+   - Maven configuration (Surefire, Failsafe, JaCoCo)
+   - Test naming conventions (Unit vs Integration)
+   - Code coverage setup and requirements
+   - Integration test patterns
+   - Code review checklist
+   - Customizable for different Java projects
+
+2. **cpp-rules-template.md** — C++ Mandatory Rules
    - Memory safety (smart pointers, RAII)
    - Naming conventions
    - Error handling
    - Code review checklist
    - Customizable for different C++ projects
 
-2. **typescript-node-rules-template.md** — TypeScript/Node.js Mandatory Rules
+3. **typescript-node-rules-template.md** — TypeScript/Node.js Mandatory Rules
    - Type safety and strict mode
    - Layer separation
    - Dependency injection
@@ -50,7 +58,7 @@ Optional language-specific extensions to global baseline AI rules.
    - Code review checklist
    - Customizable for Express, Fastify, NestJS, etc.
 
-3. **angular-rules-template.md** — Angular Mandatory Rules
+4. **angular-rules-template.md** — Angular Mandatory Rules
    - Component lifecycle management
    - Observable subscriptions
    - Type safety

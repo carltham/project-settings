@@ -6,9 +6,9 @@
 - Unit tests: Must NOT use `IT` suffix (e.g., `CategoryValidatorTest`, `PasswordEncoderTest`)
 - Never use `ITTest` or `TestIT`
 
-**Why?** Maven Surefire and Failsafe plugins use these patterns to separate unit and integration test runs.
+**Why?** Clear naming allows test frameworks to separate unit and integration test runs with different configurations and coverage reporting.
 
-See [java-testing-maven-setup.md](./java-testing-maven-setup.md) for Maven configuration.
+**Language-Specific Setup:** See language-specific rules (Java, C++, TypeScript/Node, Angular) in `../language-extensions/` for framework/language configuration details.
 
 ---
 
@@ -180,14 +180,4 @@ Create new log file in `logs/` at test suite start:
 
 ---
 
-## Maven Configuration
-
-See [java-testing-maven-setup.md](./java-testing-maven-setup.md) for:
-- Surefire plugin configuration (unit tests)
-- Failsafe plugin configuration (integration tests)
-- JaCoCo coverage setup (both)
-- Running tests with profiles
-
----
-
-**Last Updated:** 2026-07-12
+**Last Updated:** 2026-07-17

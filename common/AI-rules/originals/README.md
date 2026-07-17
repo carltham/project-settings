@@ -22,140 +22,31 @@ Together, they define how code is written, tested, built, documented, and the op
 
 ### 1. Development Rules
 
-**File:** [`development.rules.md`](./development.rules.md)
+**Location:** [`development-rules/`](./development-rules/) (organized by category)
 
-**Purpose:** Mandatory code-level standards and architectural patterns
+**Purpose:** Mandatory code-level standards, architectural patterns, and development practices
 
-**Audience:** All developers, architects, code reviewers, AI assistants
+**Audience:** All developers (human and AI), architects, code reviewers
 
-**Contents:**
-
-#### Git & Automation Safety (MANDATORY)
-
-**AI Commits** — CRITICAL SAFETY RULE
-- **AI MUST NEVER commit unless explicitly asked to do so**
-- Never commit as part of task completion
-- Never assume changes should be committed
-- Wait for explicit user instruction: "commit these changes", "make a commit", etc.
-- User retains full control over when changes persist to git
-
-**Commit Message Format** (MANDATORY)
-- Short: ~10 rows maximum
-- Copyable: Plain text format for direct pasting
-- Scope: Summarize changes since last commit
-- Structure: Subject + details + Co-Authored-By footer
-- Delivery: Ready-to-use format, no markdown formatting of message text
-
-#### Test-Driven Development (MANDATORY)
-
-**RED-GREEN-REFACTOR Cycle**
-- **RED**: Write failing test that defines expected behavior
-- **GREEN**: Write minimal code to make test pass
-- **REFACTOR**: Improve code while keeping tests passing
-
-**Core Principles:**
-- All code changes must follow TDD (features, bug fixes, refactoring, infrastructure)
-- Testability: Code designed for tests is inherently testable
-- Correctness: Failing test proves bug/feature is real before fix exists
-- Regression Prevention: Tests catch future breaks immediately
-- Documentation: Tests serve as executable specification
-
-**Violations:**
-- ❌ Write code first, tests later (defeats TDD purpose)
-- ❌ Weaken tests to make code pass (vague assertions, over-mocking)
-- ❌ Commit fixes without failing test first
-- ❌ Skip tests for "obvious" code
-
-**Regression Fixes Use TDD:**
-1. Write test that reproduces bug (fails with current code)
-2. Fix the bug (test passes)
-3. Commit both together (test + fix)
-
-#### Java Standards
-- **Class Naming (Rule 8)**
-  - PascalCase for all class names
-  - Correct spelling required (SupplierManagementPanel, not SupplyerPanel)
-  - Common misspellings to avoid listed
-
-- **File Naming (Rule 9)**
-  - File name must match public class name exactly
-  - Java Language Specification requirement
-  - Improves IDE support and code discoverability
-
-#### Architecture and Layering Standards (MANDATORY)
-
-**Three-Tier Architecture Pattern** — Enforces strict separation
-```
-Tier 1 (UI):         Swing/AWT (JFrame, JPanel, JDialog)
-Tier 2 (UI Logic):   UIControllers (HttpClient delegation)
-Tier 3 (API):        REST @RestController (HTTP endpoints)
-Tier 4 (Business):   @Service classes (business logic)
-Tier 5 (Data):       @Repository (persistence, queries)
-Tier 6 (Database):   MySQL, PostgreSQL, etc.
-```
-
-**Key Rules:**
-- **Swing Classes** — UI concerns ONLY, no business logic, no database access
-- **UIControllers** — Framework-agnostic, delegate via HttpClient
-- **Services** — Business logic and validation
-- **Repositories** — ALL database access (SQL, RecordSet, JDBC)
-- **NO database** in UI, UIController, or API layers
-- **NO Spring context** access from Swing components
-- **NO service instantiation** in UI code
-
-**Framework-Agnostic UIControllers** (Mandatory)
-- ZERO Swing/AWT imports
-- ZERO direct database access
-- Only DTOs, interfaces, standard Java
-- Communication via HttpClient for REST calls
-- Testable without UI framework or database
-
-**No AppView in Swing Classes** (Mandatory)
-- Never import `gs.Application.AppView`
-- Prevents UI coupling to infrastructure
-- Maintains testability
-
-**Dependency Injection** (Mandatory)
-- Constructor-based injection only
-- Never `new ServiceClass()` in Swing code
-- Enables testability and modularity
-
-**Database Logic Isolation** (Mandatory)
-- ALL database operations in Repository layer
-- Services delegate to repositories
-- No JDBC/SQL in UI, API, or Service layers
-
-**Configuration Classes** (Mandatory)
-- Database connections in @Configuration classes
-- Spring context initialization separate
-- Application bootstrap logic isolated from UI
-
-#### Document Organization and Structure (MANDATORY)
-
-All projects MUST follow strict folder organization for documentation:
-
-**Architecture Documents**
-- Location: `/architecture` folder in project root
-- All system design, patterns, API design, database schema documentation
-- Must have `/architecture/README.md` index
-
-**Planning Documents**
-- Location: `/planning` folder in project root
-- All sprints, tickets, roadmap, requirements
-- Sub-folders: `/planning/sprints/`, `/planning/tickets/`
-- Must have `/planning/README.md` index
-
-**Violations:**
-- ❌ Architecture docs scattered in root or source folders
-- ❌ Planning docs mixed with code directories
-- ❌ Undocumented decisions
-
-**Size:** ~28KB
-**Last Updated:** 2026-07-13
+**See** [`development-rules/README.md`](./development-rules/README.md) for full details organized by category:
+- Architecture and Layering (six-tier separation pattern)
+- API Design (endpoints, error models, authorization)
+- Security and Isolation (multi-tenant, audit, secrets)
+- Events and Observability (event patterns, logging)
+- Versioning and Change Discipline (semantic versioning)
+- Naming Conventions (Java class naming - see language-extensions for other languages)
+- Document Organization (architecture/ and planning/ structure)
+- Test-Driven Development (RED-GREEN-REFACTOR cycle)
 
 ---
 
 ### 2. Testing Rules
+
+**File:** [`testing-rules.md`](./testing-rules.md)
+
+**Purpose:** Testing standards, quality gates, determinism, isolation, security
+
+**Audience:** QA engineers, developers writing tests, code reviewers, CI/CD teams
 
 **File:** [`testing-rules.md`](./testing-rules.md)
 
@@ -176,23 +67,6 @@ All projects MUST follow strict folder organization for documentation:
 - Create log file in `logs/` at test suite start
 - Filename format: `Testing-YYMMDD-HH:MM CEST.log.md`
 - List test suite name and one-line description for each test
-
-#### Java-Specific Rules
-
-**Test Naming**
-- Integration tests: suffix with `IT` (e.g., `CashierControllerIT`)
-- Never use `ITTest` or `TestIT`
-- Unit tests: NO `IT` suffix
-
-**Maven Configuration**
-- `mvn test` must NOT run integration tests (`*IT.java`)
-- Exclude `*IT.java` explicitly in Surefire plugin
-- `mvn test` MUST produce JaCoCo code coverage report
-- Add JaCoCo `prepare-agent` + `report` to default build (not in profile)
-- Integration tests in dedicated profile (e.g., `integration-tests`)
-- Use Failsafe plugin for `*IT.java` files
-- Collect JaCoCo coverage separately (`jacoco-it.exec`)
-- Use `@{argLine}` (late-binding) for JaCoCo agent in both plugins
 
 #### Test Quality Standards
 
@@ -346,10 +220,10 @@ All projects MUST follow strict folder organization for documentation:
 
 ### For Test Writing
 → Use **Testing Rules**
-- Test organization and naming
-- Maven configuration (Surefire, Failsafe, JaCoCo)
+- Test organization and naming (language-agnostic)
 - Test quality standards and safety
 - Isolation and security gates
+- Language-specific setup: See `language-extensions/` (Java Maven, C++, TypeScript/Node, Angular)
 
 ### For Command Execution (AI or automation)
 → Use **Commands Rules**
@@ -384,7 +258,8 @@ These rules complement architecture templates in `common/architecture/`:
 
 | Version | Date | Files | Changes |
 |---------|------|-------|---------|
-| 1.0 | 2026-07-12 | development.rules.md, testing-rules.md, commands.rules.md | Initial release with Java standards, architecture patterns, testing guidelines, and command safety rules |
+| 1.1 | 2026-07-17 | README.md | Removed Java-specific Maven configuration; moved to language-extensions; kept language-agnostic testing principles |
+| 1.0 | 2026-07-12 | development.rules.md, testing-rules.md, commands.rules.md | Initial release with architecture patterns, testing guidelines, and command safety rules |
 
 ---
 

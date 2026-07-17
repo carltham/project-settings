@@ -41,14 +41,25 @@ project-settings/
 
 ## Common Development Rules
 
-**Location:** [`common/AI-rules/originals/development.rules.md`](./common/AI-rules/originals/development.rules.md)
+**Location:** [`common/AI-rules/originals/development-rules/`](./common/AI-rules/originals/development-rules/)
 
-**Status:** Protected read-only source (in `originals/` directory)
+**Status:** Protected read-only source (organized by topic in `development-rules/` subdirectory)
 
-**Language-Specific Extensions:** Available in [`common/AI-rules/language-extensions/`](./common/AI-rules/language-extensions/)
-- C++ rules, TypeScript/Node.js rules, Angular rules
-- Optional per project tech stack
-- Protected like baseline rules
+**Contents** (Non-AI specific organizational standards):
+- Architecture and Layering — Six-tier separation pattern
+- API Design — REST standards, error handling
+- Security and Isolation — Multi-tenant, audit, secrets
+- Events and Observability — Event patterns, logging
+- Versioning — Semantic versioning discipline
+- Naming Conventions — Code naming standards (Java-specific, see language-extensions for others)
+- Document Organization — Documentation folder structure
+
+**Separate from Development Rules:**
+- **AI/Automation Safety** — Git & commit rules (AI-specific) - see git & automation section in development.rules.md
+- **Test-Driven Development** — RED-GREEN-REFACTOR rules - see TDD.md
+- **Language-Specific Extensions:** Available in [`common/AI-rules/language-extensions/`](./common/AI-rules/language-extensions/)
+  - Java rules (Maven, testing, coverage)
+  - C++ rules, TypeScript/Node.js rules, Angular rules
 
 **Purpose:** Mandatory code-level standards, architecture patterns, security requirements, and best practices
 
@@ -135,233 +146,31 @@ Never commit the fix without committing the failing test first.
 - Improves debugging and audit trails
 - MUST NOT expose confidential content
 
-### Java Class Naming Standards (MANDATORY)
+---
 
-**Rule 1: PascalCase (UpperCamelCase)**
-- All class names PascalCase, no underscores
-- ✅ `CategoryManagementPanel`, `DatabaseConnection`, `PasswordChangeHandler`
-- ❌ `categoryPanel`, `category_panel`, `Category_Panel`
+## Development Rules (Non-AI Specific)
 
-**Rule 2: Swing/AWT Component Type Suffixes**
-- All Swing/AWT classes end with component type: `Frame`, `Dialog`, `Panel`, `Renderer`, `Model`, `Listener`
-- ✅ `GSPosApplicationFrame extends JFrame`, `UserRegistrationDialog extends JDialog`
-- ❌ `Application extends JFrame`, `UserRegistration extends JDialog`
+**Location:** [`common/AI-rules/originals/development-rules/`](./common/AI-rules/originals/development-rules/)
 
-**Rule 3: No J-Prefix Abbreviations**
-- J-prefix only for JDK classes (JFrame, JPanel)
-- Custom classes never use J-prefix
-- ✅ `ApplicationConfigurationFrame`, `CategoryManagementPanel`
-- ❌ `JFrmConfig`, `JPanelCategory` (as custom classes)
+**Status:** Protected read-only source (organized by topic in `development-rules/` subdirectory)
 
-**Rule 4: Descriptive Component Names**
-- Class names must clearly describe purpose AND type
-- Avoid vague single-word names
-- ✅ `MainApplicationFrame`, `CategoryManagementPanel`, `PasswordChangeHandler`
-- ❌ `Main`, `Panel`, `Handler`, `View`, `Processor`
+**Purpose:** Mandatory code standards, architecture patterns, and development practices
 
-**Rule 5: No Generic Abbreviations**
-- Use full descriptive terms, avoid vague abbreviations
-- ✅ `DataUtility`, `ValidationHelper`, `DatabaseConnection`, `ApplicationConfiguration`
-- ❌ `DataUtil`, `Helper`, `Utils`, `Mgr`, `Cfg`, `Conn`
+**See** [`development-rules/README.md`](./common/AI-rules/originals/development-rules/README.md) for:
+- Architecture and Layering — Six-tier separation pattern
+- API Design — REST standards, error handling
+- Security and Isolation — Multi-tenant, audit, secrets
+- Events and Observability — Event patterns, logging
+- Versioning — Semantic versioning discipline
+- Naming Conventions — Code naming standards (Java-specific, see language-extensions for others)
+- Document Organization — Documentation folder structure
+- Test-Driven Development — RED-GREEN-REFACTOR rules
 
-**Rule 6: No Underscore Separators**
-- CamelCase for all class names (public and inner)
-- ✅ `FrameBase`, `ConfigurationViewPanel`, `SelectorRenderer`
-- ❌ `Frame_Base`, `View_Configuration`, `Renderer_Selector`
+These rules apply to **all developers** (human and AI), architects, and code reviewers.
 
-**Rule 7: Inner Classes Follow Same Rules**
-- Private static inner classes use same standards
-- ✅ `private static class NullFormat extends Formats`
-- ❌ `private static class FormatsNULL extends Formats`
+---
 
-**Rule 8: Correct Spelling**
-- All class names must use correct spelling
-- Common misspellings: Supplyer→Supplier, Reciept→Receipt, Verifiy→Verify
-- ✅ `SupplierManagementPanel`, `ReceiptDocument`, `VerificationHandler`
-- ❌ `SupplyerPanel`, `RecieptPrinter`, `VerifiyHandler`
-
-**Rule 9: File Name Must Match Public Class**
-- File name exactly matches public class (case-sensitive)
-- Java Language Specification requirement
-- ✅ File `GSPosApplicationFrame.java` contains `public class GSPosApplicationFrame`
-- ❌ File `MainFrame.java` containing `public class GSPosApplicationFrame`
-- Impact: Improves IDE support, code discoverability, developer experience
-
-### Architecture & Layering Standards (MANDATORY)
-
-**Three-Tier Architecture Pattern** — Strict separation of concerns
-```
-Tier 1 (UI):         Swing/AWT components (JFrame, JPanel, JDialog)
-Tier 2 (UI Logic):   UIControllers (HttpClient delegation, state management)
-Tier 3 (API):        REST @RestController (HTTP endpoints, validation)
-Tier 4 (Business):   @Service classes (business logic, rules)
-Tier 5 (Data):       @Repository (persistence, queries)
-Tier 6 (Database):   MySQL, PostgreSQL, etc.
-```
-
-**Enforcement Rules:**
-- ✅ Swing classes: UI concerns ONLY (layout, rendering, events)
-- ✅ UIControllers: State management, delegate via HttpClient
-- ✅ Services: Business logic and validation
-- ✅ Repositories: Data persistence and queries
-- ❌ NO database connections in UI layer
-- ❌ NO service instantiation in UI layer
-- ❌ NO Spring context access from Swing components
-
-**No AppView in Swing Classes** (Mandatory)
-
-Swing/AWT classes must NOT import `gs.Application.AppView`
-
-❌ Violations:
-```java
-private AppView m_App;              // Never!
-m_App.getRepository();               // Never!
-m_App.getService();                  // Never!
-// Direct repository access from UI  // Never!
-```
-
-✅ Correct Pattern:
-```java
-// Framework-agnostic UIController
-public class CategoryEditorUIController implements EditorUIController {
-    private HttpClient httpClient;  // Only HttpClient
-    
-    public CategoryEditorUIController(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-    
-    public void save(CategoryDto dto) {
-        httpClient.post("/api/categories", dto, CategoryDto.class);
-    }
-}
-
-// Swing class delegates to controller
-public class CategoryEditorPanel extends JPanel {
-    private CategoryEditorUIController controller;  // Injected
-    
-    private void onSave() {
-        controller.save(getFormData());  // Delegates only
-    }
-}
-```
-
-**Framework-Agnostic UIControllers** (Mandatory)
-
-UIControllers must have ZERO Swing/AWT imports and ZERO direct database access
-
-- ✅ Imports: Only DTOs, interfaces, standard Java
-- ✅ Communication: HttpClient for REST API calls
-- ✅ State: In-memory fields, listeners for UI updates
-- ❌ NO database code, NO Swing dependencies, NO direct service instantiation
-- **Benefit:** Testable without UI framework or database
-
-**Dependency Injection Over Direct Instantiation** (Mandatory)
-
-Always use constructor-based dependency injection
-
-❌ Never:
-```java
-new CategoryService();          // In Swing code
-new RepositoryImpl();            // Anywhere
-new DatabaseConnection();       // Outside @Configuration
-```
-
-✅ Correct:
-```java
-@Service
-public class CategoryService {
-    private final ICategoryRepository repository;  // Injected
-    
-    @Autowired
-    public CategoryService(ICategoryRepository repository) {
-        this.repository = repository;
-    }
-}
-
-public class CategoryEditorUIController {
-    private final HttpClient httpClient;  // Constructor injection
-    
-    public CategoryEditorUIController(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-}
-```
-
-**Database Logic Isolation** (Mandatory)
-
-ALL database operations (SQL, RecordSet, JDBC) in Repository layer ONLY
-
-✅ Correct Structure:
-```java
-// Repository layer (database code here only)
-@Repository
-public class CategoryRepository implements ICategoryRepository {
-    public List<CategoryDto> findAll() {
-        // Database query here - this is the only place
-    }
-}
-
-// Service layer (delegates to repository)
-@Service
-public class CategoryService {
-    private final ICategoryRepository repository;
-    
-    public List<CategoryDto> getCategories() {
-        return repository.findAll();  // Delegates
-    }
-}
-```
-
-❌ Violations:
-```java
-executeQuery();                 // In Swing panels - Never!
-new PreparedStatement();        // In UI code - Never!
-// ResultSet processing in dialogs - Never!
-JDBC code outside Repository    // Never!
-```
-
-**Configuration Classes for Infrastructure** (Mandatory)
-
-Database connections, Spring context, and bootstrap logic in @Configuration classes, NOT in UI
-
-✅ Correct Pattern:
-```java
-@Configuration
-public class DatabaseConfiguration {
-    @Bean
-    public DatabaseConnection databaseConnection() {
-        // Database setup here - only place!
-        return new DatabaseConnection(...);
-    }
-}
-
-// UI layer - completely clean
-public class PointOfSalesApplicationFrame extends JFrame {
-    // Only UI concerns here
-    // No database, no Spring context, no AppView
-}
-```
-
-❌ Never:
-```java
-// In JFrame - Never!
-// Database initialization in JFrame
-// Spring ApplicationContext in Swing
-// DatabaseConnection creation in panels
-```
-
-### Versioning & Change Discipline
-
-**Semantic Versioning** for modules and contracts:
-- **PATCH:** Clarification or compatible correction (no new runtime responsibility, schema migration, endpoint, event, or report contract change)
-- **MINOR:** Backward-compatible behavior or contract addition (forward schema extension)
-- **MAJOR:** Breaking compatibility, changed module responsibilities, substantial new solution surface
-
-### Audience
-- All engineers (developers follow these standards)
-- Architects (enforce these standards)
-- Code reviewers (validate compliance)
-- QA teams (test against these patterns)
+## Testing Rules
 
 ---
 
@@ -509,9 +318,9 @@ cp originals/file.md myproject/file.md  # Copy to destination
 
 **Status:** Protected read-only source (in `originals/` directory)
 
-**Purpose:** Testing standards, quality gates, and Java-specific test configuration
+**Purpose:** Testing standards, quality gates, test organization, and data safety
 
-**Scope:** Test organization, Java naming, Maven configuration, test quality, data safety, security isolation
+**Scope:** Language-agnostic testing principles; see `language-extensions/` for language-specific configuration (Java Maven, C++, TypeScript/Node, Angular)
 
 **Size:** ~2KB | **Last Updated:** 2026-07-17
 
@@ -528,111 +337,6 @@ cp originals/file.md myproject/file.md  # Copy to destination
 - Filename format: `Testing-YYMMDD-HH:MM CEST.log.md`
   - Example: `Testing-260618-15:50 CEST.log.md`
 - List test suite name and one-line description for each test
-
-### Java Test Naming (MANDATORY)
-
-**Integration Tests**
-- Suffix with `IT` exactly (e.g., `CashierControllerIT`)
-- ✅ `CategoryRepositoryIT`, `UserServiceIT`, `PaymentControllerIT`
-- ❌ Never use `ITTest` or `TestIT`
-
-**Unit Tests**
-- Must NOT use `IT` suffix
-- ✅ `CategoryValidatorTest`, `PasswordEncoderTest`
-- ❌ Never `CategoryValidatorIT`, `PasswordEncoderITTest`
-
-**Why the distinction?** Allows Maven to run unit and integration tests separately with different plugins and coverage reports
-
-### Maven Configuration (MANDATORY)
-
-**Unit Tests with Coverage**
-```xml
-<!-- In default build (NOT in profile) -->
-<plugin>
-  <groupId>org.jacoco</groupId>
-  <artifactId>jacoco-maven-plugin</artifactId>
-  <executions>
-    <execution>
-      <goals>
-        <goal>prepare-agent</goal>
-        <goal>report</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
-
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-surefire-plugin</artifactId>
-  <configuration>
-    <excludes>
-      <exclude>**/*IT.java</exclude>  <!-- Exclude integration tests -->
-    </excludes>
-    <argLine>@{argLine}</argLine>  <!-- Late-binding for JaCoCo -->
-  </configuration>
-</plugin>
-```
-
-**Key Rules:**
-- `mvn test` must NOT run integration tests (`*IT.java`)
-- `mvn test` MUST produce JaCoCo code coverage report
-- Add JaCoCo `prepare-agent` + `report` to default build (NOT in profile)
-- Exclude `*IT.java` explicitly in Surefire plugin
-- Use `@{argLine}` (late-binding) so JaCoCo agent is picked up automatically
-
-**Integration Tests in Profile**
-```xml
-<profile>
-  <id>integration-tests</id>
-  <build>
-    <plugins>
-      <!-- JaCoCo for integration tests -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent-integration</goal>
-              <goal>report-integration</goal>
-            </goals>
-            <configuration>
-              <destFile>${project.build.directory}/jacoco-it.exec</destFile>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <!-- Failsafe for integration tests -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>**/*IT.java</include>
-          </includes>
-          <argLine>@{argLine}</argLine>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-</profile>
-```
-
-**Run Commands:**
-```bash
-mvn test                              # Unit tests + coverage
-mvn test -P integration-tests         # All tests + separate coverage
-mvn verify -P integration-tests       # Integration tests only
-```
 
 ### Test Data Safety (MANDATORY)
 
@@ -741,7 +445,7 @@ public void apiResponse_doesNotExpose_secrets() {
 ### Audience
 - QA engineers (write and maintain tests)
 - Developers (write unit and integration tests)
-- Build engineers (configure Maven)
+- Build engineers (configure language-specific test infrastructure)
 - Code reviewers (validate test quality and coverage)
 - Security teams (validate isolation and secrets protection)
 
@@ -866,7 +570,7 @@ public void apiResponse_doesNotExpose_secrets() {
 - Secrets protection in tests (mandatory)
 - Code coverage targets by tier (UI, UIControllers, API, Services, Repositories)
 - Test execution and CI/CD pipeline
-- Maven/JaCoCo configuration integration
+- Language-specific build configuration (reference to language-extensions)
 
 **EVENTS_ARCHITECTURE_TEMPLATE.md**
 - Event emission rules (only after transaction succeeds)
