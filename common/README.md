@@ -22,26 +22,47 @@ Centralized repository for **development standards**, **architecture guidelines*
 ```
 project-settings/
 ├── README.md                          (This file - project overview)
-├── common/AI-rules/
-│   ├── development.rules.md           (Mandatory code standards)
-│   └── [language-specific rules]      (Language conventions)
-└── common/architecture/
-    └── originals/
-        ├── ARCHITECTURE_PRINCIPLES_TEMPLATE.md
-        ├── API_STANDARDS_TEMPLATE.md
-        ├── SECURITY_POLICY_TEMPLATE.md
-        ├── FRONTEND_ARCHITECTURE_TEMPLATE.md
-        ├── MOBILE_ARCHITECTURE_TEMPLATE.md
-        ├── STATE_MANAGEMENT_TEMPLATE.md
-        ├── SPRINT_STRATEGY_TEMPLATE.md
-        └── README.md                  (Architecture templates guide)
+├── common/
+│   ├── originals/
+│   │   ├── AI-rules/
+│   │   │   ├── development.rules.md                (AI/automation-specific rules)
+│   │   │   ├── testing-rules.md                    (Testing standards)
+│   │   │   ├── commands.rules.md                   (Command execution safety)
+│   │   │   └── README.md
+│   │   ├── development-rules/
+│   │   │   ├── ARCHITECTURE_AND_LAYERING.md        (Six-tier separation)
+│   │   │   ├── NAMING_CONVENTIONS.md               (Code naming standards)
+│   │   │   ├── TDD.md                              (Test-driven development)
+│   │   │   ├── API_DESIGN.md                       (REST API standards)
+│   │   │   ├── SECURITY_AND_ISOLATION.md           (Multi-tenant, audit)
+│   │   │   ├── EVENTS_AND_OBSERVABILITY.md         (Event patterns, logging)
+│   │   │   ├── DOCUMENT_ORGANIZATION.md            (Architecture/planning structure)
+│   │   │   ├── VERSIONING_AND_CHANGE_DISCIPLINE.md (Semantic versioning)
+│   │   │   ├── language-specific/
+│   │   │   │   ├── java-template.md
+│   │   │   │   ├── cpp-template.md
+│   │   │   │   ├── typescript-node-template.md
+│   │   │   │   ├── angular-template.md
+│   │   │   │   └── README.md
+│   │   │   └── README.md
+│   │   └── architecture/
+│   │       └── originals/
+│   │           ├── ARCHITECTURE_PRINCIPLES_TEMPLATE.md
+│   │           ├── API_STANDARDS_TEMPLATE.md
+│   │           ├── SECURITY_POLICY_TEMPLATE.md
+│   │           ├── FRONTEND_ARCHITECTURE_TEMPLATE.md
+│   │           ├── MOBILE_ARCHITECTURE_TEMPLATE.md
+│   │           ├── STATE_MANAGEMENT_TEMPLATE.md
+│   │           ├── SPRINT_STRATEGY_TEMPLATE.md
+│   │           └── README.md
+│   └── README.md                      (You are here)
 ```
 
 ---
 
 ## Common Development Rules
 
-**Location:** [`common/AI-rules/originals/development-rules/`](./common/AI-rules/originals/development-rules/)
+**Location:** [`common/AI-rules/originals/development-rules/`](./common/originals/AI-rules/development-rules/)
 
 **Status:** Protected read-only source (organized by topic in `development-rules/` subdirectory)
 
@@ -51,13 +72,13 @@ project-settings/
 - Security and Isolation — Multi-tenant, audit, secrets
 - Events and Observability — Event patterns, logging
 - Versioning — Semantic versioning discipline
-- Naming Conventions — Code naming standards (Java-specific, see language-extensions for others)
+- Naming Conventions — Code naming standards (Java-specific, see language-specific/ for others)
 - Document Organization — Documentation folder structure
+- Test-Driven Development — RED-GREEN-REFACTOR rules
 
 **Separate from Development Rules:**
-- **AI/Automation Safety** — Git & commit rules (AI-specific) - see git & automation section in development.rules.md
-- **Test-Driven Development** — RED-GREEN-REFACTOR rules - see TDD.md
-- **Language-Specific Extensions:** Available in [`common/AI-rules/language-extensions/`](./common/AI-rules/language-extensions/)
+- **AI/Automation Safety** — Git & commit rules (AI-specific) - see [`common/originals/AI-rules/development.rules.md`](./common/originals/AI-rules/development.rules.md)
+- **Language-Specific Rule Templates:** Available in [`common/originals/development-rules/language-specific/`](./common/originals/development-rules/language-specific/)
   - Java rules (Maven, testing, coverage)
   - C++ rules, TypeScript/Node.js rules, Angular rules
 
@@ -150,13 +171,13 @@ Never commit the fix without committing the failing test first.
 
 ## Development Rules (Non-AI Specific)
 
-**Location:** [`common/AI-rules/originals/development-rules/`](./common/AI-rules/originals/development-rules/)
+**Location:** [`common/AI-rules/originals/development-rules/`](./common/originals/AI-rules/development-rules/)
 
 **Status:** Protected read-only source (organized by topic in `development-rules/` subdirectory)
 
 **Purpose:** Mandatory code standards, architecture patterns, and development practices
 
-**See** [`development-rules/README.md`](./common/AI-rules/originals/development-rules/README.md) for:
+**See** [`development-rules/README.md`](./common/originals/AI-rules/development-rules/README.md) for:
 - Architecture and Layering — Six-tier separation pattern
 - API Design — REST standards, error handling
 - Security and Isolation — Multi-tenant, audit, secrets
@@ -176,7 +197,7 @@ These rules apply to **all developers** (human and AI), architects, and code rev
 
 ## Commands & Execution Rules
 
-**Location:** [`common/AI-rules/originals/commands.rules.md`](./common/AI-rules/originals/commands.rules.md)
+**Location:** [`common/AI-rules/originals/commands.rules.md`](./common/originals/AI-rules/commands.rules.md)
 
 **Status:** Protected read-only source (in `originals/` directory)
 
@@ -314,7 +335,7 @@ cp originals/file.md myproject/file.md  # Copy to destination
 
 ## Testing Rules
 
-**Location:** [`common/AI-rules/originals/testing-rules.md`](./common/AI-rules/originals/testing-rules.md)
+**Location:** [`common/AI-rules/originals/testing-rules.md`](./common/originals/AI-rules/testing-rules.md)
 
 **Status:** Protected read-only source (in `originals/` directory)
 
@@ -609,7 +630,7 @@ public void apiResponse_doesNotExpose_secrets() {
 ### Template Usage Guidelines
 
 **Quick Start (5 minutes):**
-1. Review [Common Development Rules](./common/AI-rules/development.rules.md) for code enforcement
+1. Review [Common Development Rules](./common/originals/development-rules/) for code enforcement
 2. Copy template to your project's `/architecture` or `/docs` folder
 3. Remove `_TEMPLATE` suffix from filename
 4. Replace `[PLACEHOLDER]` values with your project details
@@ -722,7 +743,7 @@ Reference global rules, then extend them:
 ```markdown
 # [PROJECT_NAME] Development Rules Extensions
 
-Extends: [../path/to/global/development.rules.md](../path/to/global/development.rules.md)
+Extends: [../originals/AI-rules/development.rules.md](../originals/AI-rules/development.rules.md)
 
 ## Domain-Specific Naming
 
@@ -888,7 +909,7 @@ AI implements following BOTH global + local rules
 ### For a New Project
 
 1. **Review Development Standards**
-   - Read [`common/AI-rules/originals/development.rules.md`](./common/AI-rules/originals/development.rules.md)
+   - Read [`common/AI-rules/originals/development.rules.md`](./common/originals/AI-rules/development.rules.md)
    - Understand mandatory architecture patterns
    - Note language-specific conventions
 
@@ -948,7 +969,7 @@ AI implements following BOTH global + local rules
 ## Quick Links
 
 **Development Standards:**
-- [Common Development Rules](./common/AI-rules/originals/development.rules.md) — Mandatory code standards (Java, architecture, naming, security)
+- [Common Development Rules](./common/originals/AI-rules/development.rules.md) — Mandatory code standards (Java, architecture, naming, security)
 
 **Architecture Templates:**
 - [ARCHITECTURE_PRINCIPLES_TEMPLATE](./common/architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design (~23KB)
