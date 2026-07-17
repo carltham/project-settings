@@ -1,14 +1,69 @@
 # Common Testing Rules
 
-## Test Naming
+## Test Naming (MANDATORY)
 
-- Integration tests: Suffix with `IT` exactly (e.g., `CashierControllerIT`, `UserServiceIT`)
-- Unit tests: Must NOT use `IT` suffix (e.g., `CategoryValidatorTest`, `PasswordEncoderTest`)
-- Never use `ITTest` or `TestIT`
+**Test Suffix Conventions:**
+- **Unit tests:** Suffix with `Test` (e.g., `CategoryValidatorTest`, `PasswordEncoderTest`)
+- **Layer tests:** Suffix with `LT` (e.g., `UserServiceLT`, `OrderRepositoryLT`)
+- **Integration tests:** Suffix with `IT` (e.g., `CashierControllerIT`, `UserServiceIT`)
 
-**Why?** Clear naming allows test frameworks to separate unit and integration test runs with different configurations and coverage reporting.
+**Never use:** `ITTest`, `TestIT`, `LTTest`, `TestLT` (double suffixes)
+
+**Why?** Clear naming allows test frameworks to separate unit, layer, and integration test runs with different configurations and coverage reporting. This enables running different test types independently with appropriate isolation levels.
 
 **Language-Specific Setup:** See language-specific rules (Java, C++, TypeScript/Node, Angular) in `../development-rules/language-specific/` for framework/language configuration details.
+
+### Test Profile Configuration (MANDATORY)
+
+Tests MUST be separated by profiles in build configuration:
+
+**Maven Profiles (Java):**
+- `default` profile → Runs **only** `*Test.java` files (fast unit tests)
+- `-P layer` profile → Runs **only** `*LT.java` files (layer tests with isolated dependencies)
+- `-P integration` profile → Runs **only** `*IT.java` files (full integration tests)
+- `-P all-tests` profile → Runs all three (unit + layer + integration)
+
+**Build Commands:**
+```bash
+mvn test                           # Runs unit tests only (fastest, default)
+mvn test -P layer                  # Runs layer tests only
+mvn test -P integration            # Runs integration tests only
+mvn test -P all-tests              # Runs all test types
+```
+
+**Why?** 
+- Unit tests run fast (~seconds) with mocks → suitable for pre-commit checks
+- Layer tests run medium speed (~minutes) with test containers → suitable for component validation
+- Integration tests run slow (~minutes+) with real services → suitable for CI/CD pipeline
+- Developers run unit tests locally; CI runs all tests before merge
+
+See Java/language-specific templates for profile configuration details.
+
+### Coverage Reports (MANDATORY)
+
+Each test run MUST generate a separate coverage report:
+
+**Report Generation:**
+- `mvn test` → Generates `target/site/jacoco/index.html` (unit test coverage)
+- `mvn test -P layer` → Generates `target/site/jacoco-layer/index.html` (layer test coverage)
+- `mvn test -P integration` → Generates `target/site/jacoco-integration/index.html` (integration test coverage)
+- `mvn test -P all-tests` → Generates combined report (all test coverage)
+
+**Coverage Report Contents:**
+- Line coverage (% of lines executed)
+- Branch coverage (% of decision branches taken)
+- Method coverage (% of methods called)
+- Class coverage (% of classes executed)
+- Breakdown by package and class
+
+**Why?** Separate reports show which code is covered by which test type:
+- Unit test coverage → Fast feedback on business logic correctness
+- Layer test coverage → Validates internal layer contracts
+- Integration test coverage → Verifies end-to-end workflows work
+
+Review coverage reports regularly to identify gaps and improve test quality. Set minimum coverage thresholds per test type.
+
+See Java/language-specific templates for JaCoCo configuration.
 
 ---
 
