@@ -41,6 +41,14 @@ N. YY-MM-DD HH:MM (prefix): ~ command
 - Read supplied source material in place. Do not copy its contents into production code, tests, fixtures, or documentation unless the task explicitly requires a legally permissible excerpt.
 - Before a recursive delete or cleanup, inspect the resolved targets and prove that no target is an `originals/` directory or one of its ancestors.
 
+## Protect global baseline standards
+
+- **NEVER edit, modify, rename, move, or delete files in `/project-settings/common/`** (MANDATORY)
+- Global rules (`/project-settings/common/AI-rules/`) and architecture templates (`/project-settings/common/architecture/originals/`) are organizational baseline standards
+- These are frozen and protected from modification across all projects
+- Exception: Only authorized by technical leadership for organizational-wide standards updates
+- When standards need improvement: Create local extensions in your project's `AI-rules/` directory, propose changes through proper review process
+
 ## Command safety
 
 - Inspect repository status before modifying files and preserve unrelated user changes.

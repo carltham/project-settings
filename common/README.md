@@ -41,13 +41,15 @@ project-settings/
 
 ## Common Development Rules
 
-**Location:** [`common/AI-rules/development.rules.md`](./common/AI-rules/development.rules.md)
+**Location:** [`common/AI-rules/originals/development.rules.md`](./common/AI-rules/originals/development.rules.md)
+
+**Status:** Protected read-only source (in `originals/` directory)
 
 **Purpose:** Mandatory code-level standards, architecture patterns, security requirements, and best practices
 
 **Scope:** All Java development, architecture patterns, naming conventions, security standards, API design, multi-tenant requirements, observability
 
-**Size:** ~6KB | **Last Updated:** 2026-07-12
+**Size:** ~6KB | **Last Updated:** 2026-07-17
 
 ### Git & Automation
 - **Never commit automatically** — Always wait for explicit user instruction
@@ -336,13 +338,15 @@ public class PointOfSalesApplicationFrame extends JFrame {
 
 ## Commands & Execution Rules
 
-**Location:** [`common/AI-rules/commands.rules.md`](./common/AI-rules/commands.rules.md)
+**Location:** [`common/AI-rules/originals/commands.rules.md`](./common/AI-rules/originals/commands.rules.md)
+
+**Status:** Protected read-only source (in `originals/` directory)
 
 **Purpose:** Operational safety, command logging, source protection, and credential handling for all automation and AI-assisted development
 
 **Scope:** AI tool execution, command safety, logging practices, secrets protection, build/generated output management
 
-**Size:** ~2KB | **Last Updated:** 2026-07-12
+**Size:** ~2KB | **Last Updated:** 2026-07-17
 
 ### Command Logging & History
 
@@ -472,13 +476,15 @@ cp originals/file.md myproject/file.md  # Copy to destination
 
 ## Testing Rules
 
-**Location:** [`common/AI-rules/testing-rules.md`](./common/AI-rules/testing-rules.md)
+**Location:** [`common/AI-rules/originals/testing-rules.md`](./common/AI-rules/originals/testing-rules.md)
+
+**Status:** Protected read-only source (in `originals/` directory)
 
 **Purpose:** Testing standards, quality gates, and Java-specific test configuration
 
 **Scope:** Test organization, Java naming, Maven configuration, test quality, data safety, security isolation
 
-**Size:** ~2KB | **Last Updated:** 2026-07-12
+**Size:** ~2KB | **Last Updated:** 2026-07-17
 
 ### Test File Organization
 
@@ -915,21 +921,24 @@ These templates work together with Common Development Rules:
 
 ## Global Rules & Local Extensions
 
-**Important:** These are GLOBAL baseline standards. Each project should have LOCAL rules that extend and specialize these standards.
+**CRITICAL:** `/project-settings/common/` is PROTECTED and READ-ONLY. **NEVER EDIT global rules or design files.**
 
 ### Global vs Local Rules
 
-**Global Rules** (this repository)
-- Apply to ALL projects
+**Global Rules** (this repository) — **READ-ONLY, PROTECTED**
+- Apply to ALL projects across the organization
 - Baseline standards everyone follows
 - Language-agnostic patterns (architecture, security, testing)
-- Rarely change (quarterly review)
+- **FROZEN**: Changes only with technical leadership approval
+- **PROTECTED**: No direct edits allowed
+- Exception: Authorized organizational-wide standards updates only
 
-**Local Rules** (in each project's `AI-rules/` directory)
-- Project-specific extensions
-- Override global rules only with approval
-- Domain-specific patterns (business logic, naming conventions)
+**Local Rules** (in each project's `AI-rules/` directory) — **EDITABLE, PROJECT-SPECIFIC**
+- Project-specific extensions that EXTEND global rules
+- Domain-specific patterns (business logic, naming conventions, compliance)
+- Override global rules only with explicit approval (documented with rationale)
 - Change frequently (as project evolves)
+- This is where you customize and extend standards for your project
 
 ### Example: Naming Standards
 
@@ -1069,13 +1078,13 @@ Every payment operation requires:
 # [PROJECT_NAME] Local Rules
 
 This project uses:
-1. **Global Rules** from [project-settings/common/AI-rules/](../../project-settings/common/AI-rules/)
+1. **Global Rules** from [project-settings/common/AI-rules/originals/](../../project-settings/common/AI-rules/originals/)
 2. **Local Extensions** in this directory
 
 ## For AI Assistants
 
 When working on this project:
-1. Read GLOBAL rules first: [development.rules.md](../../project-settings/common/AI-rules/development.rules.md)
+1. Read GLOBAL rules first: [development.rules.md](../../project-settings/common/AI-rules/originals/development.rules.md)
 2. Read LOCAL extensions: [development-extensions.md](./development-extensions.md)
 3. FOLLOW BOTH (local rules extend, not replace, global rules)
 
@@ -1095,12 +1104,22 @@ When working on this project:
 - Team preferences (code review process, testing approach)
 - Performance targets (latency, throughput requirements)
 
-## When NOT to Create New Local Rules
+## When NOT to Create New Local Rules (What NOT to Do)
 
+- ❌ **NEVER edit files in `/project-settings/common/`** — Global rules are protected
 - ❌ Don't override global architecture rules (three-tier layering)
 - ❌ Don't weaken global security requirements
 - ❌ Don't skip global testing standards
 - ❌ Don't ignore global naming conventions
+- ❌ Don't assume you can "fix" a global rule — go through proper change process
+- ❌ Don't make "quick updates" to organizational standards
+
+**If you find a problem with global rules:**
+1. Document the issue with context
+2. Propose a specific change
+3. Get approval from technical leads
+4. Update version history
+5. Notify affected teams
 
 ## Requesting Exceptions
 
@@ -1136,7 +1155,7 @@ AI implements following BOTH global + local rules
 ### For a New Project
 
 1. **Review Development Standards**
-   - Read [`common/AI-rules/development.rules.md`](./common/AI-rules/development.rules.md)
+   - Read [`common/AI-rules/originals/development.rules.md`](./common/AI-rules/originals/development.rules.md)
    - Understand mandatory architecture patterns
    - Note language-specific conventions
 
@@ -1188,6 +1207,7 @@ AI implements following BOTH global + local rules
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1 | 2026-07-17 | Moved AI-rules to `originals/` subdirectory for read-only protection; updated all cross-references |
 | 1.0 | 2026-07-12 | Initial release: Common Development Rules (Java, architecture, security) + Architecture Templates (7 templates) |
 
 ---
@@ -1195,7 +1215,7 @@ AI implements following BOTH global + local rules
 ## Quick Links
 
 **Development Standards:**
-- [Common Development Rules](./common/AI-rules/development.rules.md) — Mandatory code standards (Java, architecture, naming, security)
+- [Common Development Rules](./common/AI-rules/originals/development.rules.md) — Mandatory code standards (Java, architecture, naming, security)
 
 **Architecture Templates:**
 - [ARCHITECTURE_PRINCIPLES_TEMPLATE](./common/architecture/originals/ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System design (~23KB)
@@ -1228,7 +1248,7 @@ A: Yes! Templates are meant to be customized. Copy them to your project, replace
 A: Quarterly for architecture, annually comprehensive. Update immediately when major decisions change.
 
 **Q: Do development rules apply to all languages?**  
-A: Development rules currently focus on Java and architecture patterns. Language-specific rules may be added to `common/AI-rules/`.
+A: Development rules currently focus on Java and architecture patterns. Language-specific rules may be added to `common/AI-rules/originals/`.
 
 **Q: What if we need to violate a development rule?**  
 A: Document the exception with justification. Have it reviewed and approved by technical leads. Update the rules if it represents a legitimate pattern.
@@ -1264,6 +1284,6 @@ A: No. Templates provide structure and guidance. Each project must customize ext
 
 ---
 
-**Last Updated:** 2026-07-12  
+**Last Updated:** 2026-07-17  
 **Maintained by:** Architecture Team  
 **Status:** Production-ready for customization

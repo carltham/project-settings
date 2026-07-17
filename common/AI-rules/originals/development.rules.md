@@ -20,6 +20,39 @@
 - User retains full control over when changes are persisted to git
 - Always report what changed, let user decide commit timing
 
+### Global Rules & Design Files are Read-Only (MANDATORY)
+
+**NEVER edit, modify, rename, move, or delete files in `/project-settings/common/`** (CRITICAL)
+
+- Global rules in `/project-settings/common/AI-rules/` are baseline standards for ALL projects
+- Global architecture templates in `/project-settings/common/architecture/originals/` are reference material
+- These files are FROZEN and PROTECTED from modification
+- Exception: Only update when explicitly authorized by technical leadership for organizational-wide change
+- Process for organizational changes:
+  1. Document justification and impact analysis
+  2. Get approval from technical leads (multiple reviewers)
+  3. Update version history with change rationale
+  4. Notify all projects that depend on these standards
+  5. Allow grace period for projects to adapt
+
+**What to do instead:**
+- Create LOCAL rules in your project's `AI-rules/` directory
+- LOCAL rules EXTEND (not replace) global rules
+- Reference global rules in your local documentation
+- Propose improvements to global standards through proper change process
+
+**Why this rule exists:**
+- Global rules must remain stable across all projects
+- Accidental edits break consistency for all projects using these standards
+- Changes to baseline standards require coordinated team review
+- Protects organizational standards from drift and corruption
+
+Violations:
+- ❌ Editing `/project-settings/common/AI-rules/*.md` files
+- ❌ Editing `/project-settings/common/architecture/originals/*.md` files
+- ❌ Modifying any file in `/project-settings/common/` without explicit authorization
+- ❌ "Quick fixes" to global rules without team approval
+
 ### Commit Message Format (MANDATORY)
 When requested to provide a commit message, follow this format:
 - **Length**: Concise, ~10 rows maximum
