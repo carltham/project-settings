@@ -4,7 +4,13 @@ Comprehensive development standards for code quality, architecture, and organiza
 
 **Status:** Protected read-only baseline standards  
 **Applies to:** All developers, architects, code reviewers  
-**Location:** Part of `common/AI-rules/originals/`
+**Location:** Part of `common/originals/development-rules/`
+
+---
+
+## Overview
+
+This directory contains mandatory development standards applicable to all developers (human and AI), organized by category. Language-specific templates are available in `language-specific/` subdirectory for projects to copy and customize.
 
 ---
 
@@ -17,7 +23,7 @@ Comprehensive development standards for code quality, architecture, and organiza
   - Dependency injection requirements
   - Layering violations
 
-- **[NAMING_CONVENTIONS.md](./NAMING_CONVENTIONS.md)** — Code naming standards (Java-specific, see language-extensions for others)
+- **[NAMING_CONVENTIONS.md](./NAMING_CONVENTIONS.md)** — Code naming standards (Java-specific, see language-specific/ for others)
   - PascalCase for classes
   - Component type suffixes
   - File naming requirements
@@ -63,26 +69,58 @@ Comprehensive development standards for code quality, architecture, and organiza
 
 ---
 
+## Language-Specific Templates
+
+**Location:** [`language-specific/`](./language-specific/) (copy & customize for your project)
+
+These are **TEMPLATES** that projects should copy to their local `AI-rules/` directory and customize for their specific language and tech stack.
+
+- **[java-template.md](./language-specific/java-template.md)** — Java development rules
+  - Maven configuration (Surefire, Failsafe, JaCoCo)
+  - Test naming conventions (Unit vs Integration)
+  - Code coverage setup and requirements
+  - Integration test patterns
+
+- **[cpp-template.md](./language-specific/cpp-template.md)** — C++ development rules
+  - Memory safety (smart pointers, RAII)
+  - Naming conventions
+  - Error handling
+  - Testing patterns
+
+- **[typescript-node-template.md](./language-specific/typescript-node-template.md)** — TypeScript/Node.js development rules
+  - Type safety and strict mode
+  - Layer separation
+  - Dependency injection
+  - Error handling
+  - Express, Fastify, NestJS patterns
+
+- **[angular-template.md](./language-specific/angular-template.md)** — Angular development rules
+  - Component lifecycle management
+  - Observable subscriptions and memory leak prevention
+  - Type safety and strict mode
+  - Testing requirements
+  - Change detection strategies
+
+---
+
 ## Not Included Here
 
 **AI/Automation-Specific Rules:**
 - Commit message format
 - Command execution safety
 - Source protection
-- See `ai-automation-safety.md` in parent directory
-
-**Language-Specific Rules:**
-- Java Maven configuration
-- C++ memory management
-- TypeScript/Node patterns
-- Angular component lifecycle
-- See `../language-extensions/` for language-specific extensions
+- See `../AI-rules/development.rules.md` in parent directory
 
 **Testing Rules:**
 - Test organization
 - Test quality standards
 - Cross-tenant denial tests
-- See `../testing-rules.md` for baseline testing standards
+- See `../AI-rules/testing-rules.md` in parent directory
+
+**Commands & Safety:**
+- AI command execution safety
+- Logging practices
+- See `../AI-rules/commands.rules.md` in parent directory
 
 ---
 
@@ -102,6 +140,9 @@ Comprehensive development standards for code quality, architecture, and organiza
 
 ### For DevOps/Compliance
 → Focus on: Document Organization, Security & Isolation, Events & Observability, Versioning
+
+### For Language-Specific Setup
+→ Copy template from `language-specific/` and customize for your project
 
 ---
 

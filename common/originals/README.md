@@ -34,7 +34,7 @@ Together, they define how code is written, tested, built, documented, and the op
 - Security and Isolation (multi-tenant, audit, secrets)
 - Events and Observability (event patterns, logging)
 - Versioning and Change Discipline (semantic versioning)
-- Naming Conventions (Java class naming - see language-extensions for other languages)
+- Naming Conventions (Java class naming - see development-rules/language-specific/ for other languages)
 - Document Organization (architecture/ and planning/ structure)
 - Test-Driven Development (RED-GREEN-REFACTOR cycle)
 
@@ -42,13 +42,13 @@ Together, they define how code is written, tested, built, documented, and the op
 
 ### 2. Testing Rules
 
-**File:** [`testing-rules.md`](./testing-rules.md)
+**File:** [`AI-rules/testing-rules.md`](./AI-rules/testing-rules.md)
 
 **Purpose:** Testing standards, quality gates, determinism, isolation, security
 
 **Audience:** QA engineers, developers writing tests, code reviewers, CI/CD teams
 
-**File:** [`testing-rules.md`](./testing-rules.md)
+**File:** [`AI-rules/testing-rules.md`](./AI-rules/testing-rules.md)
 
 **Purpose:** Testing standards, quality gates, Java-specific patterns
 
@@ -100,7 +100,7 @@ Together, they define how code is written, tested, built, documented, and the op
 
 ### 3. Commands Rules
 
-**File:** [`commands.rules.md`](./commands.rules.md)
+**File:** [`AI-rules/commands.rules.md`](./AI-rules/commands.rules.md)
 
 **Purpose:** AI command execution, logging, source protection, and safety practices
 
@@ -223,7 +223,7 @@ Together, they define how code is written, tested, built, documented, and the op
 - Test organization and naming (language-agnostic)
 - Test quality standards and safety
 - Isolation and security gates
-- Language-specific setup: See `language-extensions/` (Java Maven, C++, TypeScript/Node, Angular)
+- Language-specific setup: See `development-rules/language-specific/` (Java, C++, TypeScript/Node, Angular)
 
 ### For Command Execution (AI or automation)
 → Use **Commands Rules**

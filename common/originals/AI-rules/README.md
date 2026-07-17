@@ -17,11 +17,11 @@
 - **Full Documentation** → [`originals/README.md`](./originals/README.md)
 
 ### Language-Specific Extensions (Optional per tech stack)
-- **Java** → [`language-extensions/java-rules-template.md`](./language-extensions/java-rules-template.md)
-- **C++** → [`language-extensions/cpp-rules-template.md`](./language-extensions/cpp-rules-template.md)
-- **TypeScript/Node.js** → [`language-extensions/typescript-node-rules-template.md`](./language-extensions/typescript-node-rules-template.md)
-- **Angular** → [`language-extensions/angular-rules-template.md`](./language-extensions/angular-rules-template.md)
-- **Extensions Guide** → [`language-extensions/README.md`](./language-extensions/README.md)
+- **Java** → [`../development-rules/language-specific/java-template.md`](../development-rules/language-specific/java-template.md)
+- **C++** → [`../development-rules/language-specific/cpp-template.md`](../development-rules/language-specific/cpp-template.md)
+- **TypeScript/Node.js** → [`../development-rules/language-specific/typescript-node-template.md`](../development-rules/language-specific/typescript-node-template.md)
+- **Angular** → [`../development-rules/language-specific/angular-template.md`](../development-rules/language-specific/angular-template.md)
+- **Extensions Guide** → [`../development-rules/language-specific/README.md`](../development-rules/language-specific/README.md)
 
 ---
 

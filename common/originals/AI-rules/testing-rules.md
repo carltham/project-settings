@@ -8,7 +8,7 @@
 
 **Why?** Clear naming allows test frameworks to separate unit and integration test runs with different configurations and coverage reporting.
 
-**Language-Specific Setup:** See language-specific rules (Java, C++, TypeScript/Node, Angular) in `../language-extensions/` for framework/language configuration details.
+**Language-Specific Setup:** See language-specific rules (Java, C++, TypeScript/Node, Angular) in `../development-rules/language-specific/` for framework/language configuration details.
 
 ---
 

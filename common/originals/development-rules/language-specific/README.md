@@ -3,7 +3,7 @@
 Optional language-specific extensions to global baseline AI rules.
 
 **Location:** `../originals/` (extends core rules)  
-**Status:** Protected read-only source (in `language-extensions/` subdirectory)
+**Status:** Protected read-only baseline templates
 
 ---
 

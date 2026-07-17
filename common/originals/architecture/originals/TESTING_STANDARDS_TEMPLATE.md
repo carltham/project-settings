@@ -432,8 +432,8 @@ mvn test -Dtest=CategoryServiceTest
 ## Related Documents
 
 - [ARCHITECTURE_PRINCIPLES_TEMPLATE.md](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — Layering model
-- [testing-rules.md](../../common-AI-rules/originals/testing-rules.md) — Testing rules (determinism, isolation)
-- Language-specific testing setup: See `common-AI-rules/language-extensions/` (Java, C++, TypeScript/Node, Angular)
+- [testing-rules.md](../../../originals/AI-rules/testing-rules.md) — Testing rules (determinism, isolation)
+- Language-specific testing setup: See `../../../originals/development-rules/language-specific/` (Java, C++, TypeScript/Node, Angular)
 
 ---
 

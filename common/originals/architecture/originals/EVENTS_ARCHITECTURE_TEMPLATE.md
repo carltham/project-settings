@@ -468,7 +468,7 @@ public void shouldHandleDuplicateEvents() {
 ## Related Documents
 
 - [ARCHITECTURE_PRINCIPLES_TEMPLATE.md](./ARCHITECTURE_PRINCIPLES_TEMPLATE.md) — System architecture
-- [events-rules.md](../../common-AI-rules/development.rules.md) — Event emission rules
+- [EVENTS_AND_OBSERVABILITY.md](../../../originals/development-rules/EVENTS_AND_OBSERVABILITY.md) — Event emission rules
 - [SECURITY_POLICY_TEMPLATE.md](./SECURITY_POLICY_TEMPLATE.md) — Secrets protection
 
 ---

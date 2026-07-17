@@ -1,6 +1,6 @@
 # Java Class Naming Standards - MANDATORY
 
-**Note:** Java-specific standards. See `../language-extensions/` for other languages (C++, TypeScript/Node, Angular).
+**Note:** Java-specific standards. See `./language-specific/` for other languages (C++, TypeScript/Node, Angular).
 
 ## Rule 1: PascalCase (UpperCamelCase) - MANDATORY
 
