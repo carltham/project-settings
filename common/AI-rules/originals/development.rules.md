@@ -65,6 +65,11 @@ When requested to provide a commit message, follow this format:
 - **Example Request**: "give me a short 10 rows commit message since last commit, copyable"
 - **Delivery**: Plain text code block with no markdown formatting of the message itself
 
+**Specialized Formats:**
+- Projects may request custom commit message formats for specific workflows
+- Submit specialized formats as project-level rules (in project's `AI-rules/` directory)
+- Custom formats extend this generic standard but must follow ~10 row, copyable plain text principles
+
 ## Document Organization and Structure (MANDATORY)
 
 All projects MUST follow strict folder organization for documentation and planning materials.
