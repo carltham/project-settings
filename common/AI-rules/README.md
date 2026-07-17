@@ -10,10 +10,17 @@
 
 ## Quick Navigation
 
+### Baseline Rules (Apply to ALL projects)
 - **Development Rules** → [`originals/development.rules.md`](./originals/development.rules.md)
 - **Testing Rules** → [`originals/testing-rules.md`](./originals/testing-rules.md)
 - **Commands Rules** → [`originals/commands.rules.md`](./originals/commands.rules.md)
 - **Full Documentation** → [`originals/README.md`](./originals/README.md)
+
+### Language-Specific Extensions (Optional per tech stack)
+- **C++** → [`language-extensions/cpp-rules-template.md`](./language-extensions/cpp-rules-template.md)
+- **TypeScript/Node.js** → [`language-extensions/typescript-node-rules-template.md`](./language-extensions/typescript-node-rules-template.md)
+- **Angular** → [`language-extensions/angular-rules-template.md`](./language-extensions/angular-rules-template.md)
+- **Extensions Guide** → [`language-extensions/README.md`](./language-extensions/README.md)
 
 ---
 

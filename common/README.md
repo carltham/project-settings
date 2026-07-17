@@ -45,6 +45,11 @@ project-settings/
 
 **Status:** Protected read-only source (in `originals/` directory)
 
+**Language-Specific Extensions:** Available in [`common/AI-rules/language-extensions/`](./common/AI-rules/language-extensions/)
+- C++ rules, TypeScript/Node.js rules, Angular rules
+- Optional per project tech stack
+- Protected like baseline rules
+
 **Purpose:** Mandatory code-level standards, architecture patterns, security requirements, and best practices
 
 **Scope:** All Java development, architecture patterns, naming conventions, security standards, API design, multi-tenant requirements, observability, **test-driven development**

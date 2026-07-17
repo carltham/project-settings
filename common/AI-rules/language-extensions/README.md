@@ -1,6 +1,9 @@
-# AI Rules Templates
+# Language-Specific AI Rules Extensions
 
-Reusable rule templates for language-specific development standards. These are generic templates that can be copied and customized for specific projects.
+Optional language-specific extensions to global baseline AI rules.
+
+**Location:** `../originals/` (extends core rules)  
+**Status:** Protected read-only source (in `language-extensions/` subdirectory)
 
 ---
 
