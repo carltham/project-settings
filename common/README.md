@@ -47,9 +47,33 @@ project-settings/
 
 **Purpose:** Mandatory code-level standards, architecture patterns, security requirements, and best practices
 
-**Scope:** All Java development, architecture patterns, naming conventions, security standards, API design, multi-tenant requirements, observability
+**Scope:** All Java development, architecture patterns, naming conventions, security standards, API design, multi-tenant requirements, observability, **test-driven development**
 
-**Size:** ~6KB | **Last Updated:** 2026-07-17
+**Size:** ~8KB | **Last Updated:** 2026-07-17
+
+### Test-Driven Development (MANDATORY)
+
+**RED-GREEN-REFACTOR Cycle** — Applies to all code changes (features, bug fixes, refactoring, infrastructure)
+
+**The Process:**
+- **RED**: Write failing test that defines expected behavior
+- **GREEN**: Write minimal code to make test pass
+- **REFACTOR**: Improve code while keeping tests passing
+
+**Why TDD Matters:**
+- Testability: Code designed for tests is inherently testable
+- Correctness: Failing test proves bug/feature is real before fix exists
+- Design: Writing tests first forces better API design
+- Regression Prevention: Tests catch future breaks immediately
+- Documentation: Tests serve as executable specification
+- Prevents Over-Engineering: Minimal code avoids gold-plating
+
+**For Regression Fixes:**
+1. Write test that reproduces bug (fails with current code)
+2. Fix the bug (test passes)
+3. Commit both together (test + fix)
+
+Never commit the fix without committing the failing test first.
 
 ### Git & Automation
 - **Never commit automatically** — Always wait for explicit user instruction

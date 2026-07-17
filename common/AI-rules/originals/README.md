@@ -10,7 +10,7 @@ Comprehensive AI-friendly guidelines for development standards, testing practice
 
 This directory contains three complementary rule sets:
 
-1. **Development Rules** — Code standards, architecture patterns, naming conventions, **document organization** (MANDATORY)
+1. **Development Rules** — Code standards, architecture patterns, naming conventions, **document organization**, **test-driven development (TDD)** (MANDATORY)
 2. **Testing Rules** — Test structure, quality, data safety, Java-specific patterns
 3. **Commands Rules** — AI command execution, logging, source protection, safety practices
 
@@ -45,6 +45,31 @@ Together, they define how code is written, tested, built, documented, and the op
 - Scope: Summarize changes since last commit
 - Structure: Subject + details + Co-Authored-By footer
 - Delivery: Ready-to-use format, no markdown formatting of message text
+
+#### Test-Driven Development (MANDATORY)
+
+**RED-GREEN-REFACTOR Cycle**
+- **RED**: Write failing test that defines expected behavior
+- **GREEN**: Write minimal code to make test pass
+- **REFACTOR**: Improve code while keeping tests passing
+
+**Core Principles:**
+- All code changes must follow TDD (features, bug fixes, refactoring, infrastructure)
+- Testability: Code designed for tests is inherently testable
+- Correctness: Failing test proves bug/feature is real before fix exists
+- Regression Prevention: Tests catch future breaks immediately
+- Documentation: Tests serve as executable specification
+
+**Violations:**
+- ❌ Write code first, tests later (defeats TDD purpose)
+- ❌ Weaken tests to make code pass (vague assertions, over-mocking)
+- ❌ Commit fixes without failing test first
+- ❌ Skip tests for "obvious" code
+
+**Regression Fixes Use TDD:**
+1. Write test that reproduces bug (fails with current code)
+2. Fix the bug (test passes)
+3. Commit both together (test + fix)
 
 #### Java Standards
 - **Class Naming (Rule 8)**
