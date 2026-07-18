@@ -127,6 +127,60 @@ public class DatabaseConfiguration {
 }
 ```
 
+## Continuous Integration & Quality Gates (MANDATORY)
+
+### External/Global Jenkins
+
+All projects use a centralized, organization-wide Jenkins instance for CI/CD pipelines.
+
+**Requirements:**
+- **MANDATORY**: All projects configure CI/CD pipeline in global Jenkins
+- **MANDATORY**: Build configuration stored in project repository (`Jenkinsfile` or equivalent)
+- **MANDATORY**: Pipeline runs on every commit (unit tests, layer tests, integration tests)
+- **MANDATORY**: Builds must pass before merge to main branch
+- **NEVER**: Create project-specific Jenkins instances; use global instance
+- **Why**: Centralized infrastructure, consistent build process, auditable deployment
+
+### SonarQube Code Quality
+
+All projects use a centralized SonarQube instance for continuous code quality analysis.
+
+**Requirements:**
+- **MANDATORY**: Every commit scanned by SonarQube
+- **MANDATORY**: Code quality gate must pass before merge
+- **MANDATORY**: Coverage reports from all test profiles sent to SonarQube:
+  - Unit test coverage (`*Test`)
+  - Layer test coverage (`*LT`)
+  - Integration test coverage (`*IT`)
+- **MANDATORY**: Security issues must be resolved before merge
+- **NEVER**: Disable quality gates or merge with failed analysis
+- **Why**: Early detection of bugs, security issues, and technical debt; enforces code standards
+
+**Coverage Targets (Configurable per Project):**
+- Minimum line coverage: 60%
+- Minimum branch coverage: 50%
+- Maximum technical debt ratio: 5%
+- Zero security issues: BLOCKER
+
+### CI/CD Pipeline Flow
+
+```
+Commit → Jenkins Build
+         ↓
+    Run all test profiles (unit, layer, integration)
+         ↓
+    Generate coverage reports
+         ↓
+    SonarQube scan (code quality, security, coverage)
+         ↓
+    Quality gate pass/fail
+         ↓
+    If pass: approve merge
+    If fail: block merge, fix issues
+```
+
+---
+
 ## Violations (Never Do These)
 
 - ❌ Database code in UI layer
@@ -136,6 +190,8 @@ public class DatabaseConfiguration {
 - ❌ Spring context access from Swing components
 - ❌ PreparedStatement in UI code
 - ❌ Database initialization in JFrame
+- ❌ Merging code with failed SonarQube quality gate
+- ❌ Creating project-specific Jenkins (use global instance)
 
 ---
 
