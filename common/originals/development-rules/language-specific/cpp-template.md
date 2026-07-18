@@ -108,16 +108,63 @@ Mandatory constraints for C++17+ projects. Customize for your project's needs.
 
 ---
 
+## Build System & Package Management (MANDATORY)
+
+### Rule 13: Conan as Package Manager
+- **MANDATORY**: Use Conan for all C++ dependency management
+- **MANDATORY**: All external dependencies declared in `conanfile.txt` or `conanfile.py`
+- **NEVER**: Manually download or commit dependencies
+- **MANDATORY**: CI/CD runs `conan install` before build
+- **Why**: Reproducible builds, version control, cross-platform compatibility
+- **Enforcement**: Build system validation, CI/CD gates
+
+### Rule 14: CMake as Build System
+- **MANDATORY**: CMakeLists.txt required at project root
+- **MANDATORY**: All targets defined in CMake
+- **NEVER**: Manual compilation commands in documentation
+- **Why**: Standardized build, IDE integration, reproducibility
+- **Enforcement**: Build system requirement
+
+### Installation & Dependencies (Project Setup)
+
+**Manual Installation (One-time):**
+```bash
+# Install Conan package manager
+pip install conan
+
+# Install system build tools
+sudo apt-get install build-essential cmake g++ libssl-dev libpq-dev libgtest-dev
+```
+
+**Project Setup (Per clone):**
+```bash
+# Install project dependencies via Conan
+conan install . --output-folder=build --build=missing
+
+# Build project
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make
+```
+
+**Why these dependencies:**
+- `build-essential`, `cmake`, `g++` — C++ compilation toolchain
+- `libssl-dev` — TLS/SSL support
+- `libpq-dev` — PostgreSQL database client
+- `libgtest-dev` — Google Test framework for unit tests
+
+---
+
 ## Logging and Secrets (MANDATORY)
 
-### Rule 13: NEVER Log Credentials or Tokens
+### Rule 15: NEVER Log Credentials or Tokens
 - **MANDATORY**: No passwords, tokens, or API keys in logs
 - **MANDATORY**: No sensitive data in error messages
 - **Action**: Log operation name, context (IDs only)
 - **Why**: Security breach prevention
 - **Enforcement**: Code review (grep for secrets)
 
-### Rule 14: Error Logging with Context
+### Rule 16: Error Logging with Context
 - **MANDATORY**: Log errors with sufficient context for debugging
 - **MANDATORY**: Include error code, operation name, relevant IDs
 - **NEVER**: Swallow errors silently
@@ -139,9 +186,12 @@ Before merging any C++ code:
 - ✅ Proper synchronization for concurrent access
 - ✅ Objects kept alive during async ops
 - ✅ No implementation in headers
+- ✅ All dependencies in conanfile.txt (no manual deps)
+- ✅ CMakeLists.txt updated with new targets
 - ✅ No credentials in logs
 - ✅ Tests present and deterministic
 - ✅ No compiler warnings
+- ✅ Project builds via `conan install && cmake && make`
 
 ---
 
