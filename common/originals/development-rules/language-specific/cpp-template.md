@@ -155,6 +155,49 @@ make
 
 ---
 
+## HTTP Framework (MANDATORY)
+
+### Architectural Decision: cpp-httplib (v0.14.0+)
+
+**Framework Choice:**
+- **MANDATORY**: Use `cpp-httplib` (v0.14.0 or later) for all HTTP server functionality
+- **NEVER**: Use Crow or other HTTP frameworks
+- **MANDATORY**: Add to `conanfile.txt`: `cpp-httplib/0.14.0@`
+
+**Rationale:**
+- **KISS Principle** — Simpler, single-header library vs. framework overhead
+- **Conan Availability** — Direct package support via Conan
+- **Production Ready** — Lightweight, mature, widely used in C++ projects
+- **Minimal Dependencies** — Reduces build complexity and dependency chain
+
+**Basic Usage:**
+```cpp
+#include <cpp-httplib/httplib.h>
+
+int main() {
+    httplib::Server svr;
+    
+    svr.Post("/api/endpoint", [](const httplib::Request& req, httplib::Response& res) {
+        res.set_content("Hello, World!", "text/plain");
+    });
+    
+    svr.listen("0.0.0.0", 8080);
+    return 0;
+}
+```
+
+**Conan Integration:**
+```
+# conanfile.txt
+[requires]
+cpp-httplib/0.14.0
+
+[generators]
+cmake_find_package
+```
+
+---
+
 ## Logging and Secrets (MANDATORY)
 
 ### Rule 15: NEVER Log Credentials or Tokens
@@ -187,6 +230,7 @@ Before merging any C++ code:
 - ✅ Objects kept alive during async ops
 - ✅ No implementation in headers
 - ✅ All dependencies in conanfile.txt (no manual deps)
+- ✅ HTTP endpoints use cpp-httplib (v0.14.0+), not Crow
 - ✅ CMakeLists.txt updated with new targets
 - ✅ No credentials in logs
 - ✅ Tests present and deterministic

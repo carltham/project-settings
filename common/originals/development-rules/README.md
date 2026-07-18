@@ -14,6 +14,76 @@ This directory contains mandatory development standards applicable to all develo
 
 ---
 
+## Core Architecture Principles
+
+All development rules, standards, and architectural decisions are guided by three core principles:
+
+### 1. KISS (Keep It Simple, Stupid)
+
+**Definition:** Favor simplicity over complexity. Choose solutions that are easy to understand, maintain, and modify.
+
+**Application:**
+- Simple, working solutions beat clever, fragile solutions
+- Avoid over-engineering and premature optimization
+- Remove unnecessary abstractions and indirection
+- If a solution is hard to explain, it's probably too complex
+- Prefer fewer, well-understood components over many specialized ones
+
+**Examples:**
+- cpp-httplib (simple, single-header) over Crow (framework)
+- One database approach per project, not multiple options
+- Direct function calls over message queues when appropriate
+
+### 2. Separation of Concerns
+
+**Definition:** Each component has a single, well-defined responsibility. No mixing of concerns across boundaries.
+
+**Application:**
+- UI layer handles presentation only (no business logic, no database)
+- Service layer handles business logic only (no HTTP, no persistence details)
+- Repository layer handles data access only (no business rules)
+- Each layer can be tested and modified independently
+- Clear boundaries between layers, enforced at code review
+
+**Examples:**
+- UIControllers framework-agnostic (no Swing, no Spring, no database imports)
+- Services use dependency injection, never instantiate repositories
+- Repositories contain SQL only, never application logic
+
+### 3. No One-Size-Fits-All
+
+**Definition:** Different problems require different solutions. Guidelines should enable choice, not enforce uniformity.
+
+**Application:**
+- **Local rules extend, don't replace, global rules** — Projects customize for their domain
+- **Language-specific templates** — Each language has different idioms and best practices
+- **Multiple testing approaches** — Unit tests, layer tests, integration tests for different purposes
+- **Build flexibility** — Conan for C++, npm for Node, Maven for Java (not forced)
+- **Tool diversity** — Multiple logging frameworks, test frameworks, HTTP libraries are valid
+
+**Examples:**
+- Global testing principles + project-specific coverage targets
+- C++ rules for memory safety + Java rules for concurrency (not the same)
+- TDD for critical workflows, unit tests only for threading bugs (not all code)
+- Architectural templates customized per project, not copied as-is
+
+---
+
+## How These Principles Work Together
+
+**KISS** keeps complexity manageable. When choices are simple, developers understand them.
+
+**Separation of Concerns** makes simple solutions possible. Each layer focuses on one thing, stays testable, stays maintainable.
+
+**No One-Size-Fits-All** acknowledges that simplicity looks different in different contexts. A simple C++ HTTP service looks different from a simple Node.js service. Both can be simple—just simply different.
+
+**The Balance:**
+- Don't over-comply with rules (violates KISS)
+- Don't blur layer boundaries (violates separation of concerns)
+- Don't force one approach everywhere (violates flexibility)
+
+---
+
 ## Rules by Category
 
 ### Architecture & Code Organization
