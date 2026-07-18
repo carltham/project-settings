@@ -1,5 +1,21 @@
 # Common Testing Rules
 
+## Core Testing Principles
+
+Testing follows seven core principles that guide design, implementation, and execution:
+
+1. **Iterative TDD** — Development driven by end-to-end (IT) tests, pausing at layer boundaries to create focused layer tests (LT)
+2. **Layer-Scoped** — Each test targets a single responsibility boundary; LT tests one layer, IT tests full flows
+3. **Deterministic** — Tests repeat with identical results; no sleeps, randomness, or timing dependencies
+4. **Isolated** — Each test runs independently with clean state; no cross-test dependencies or shared side effects
+5. **Security-Focused** — Tests validate security boundaries, especially cross-tenant isolation and credential protection
+6. **Critical-Issue-Only Units** — Unit tests (*Test) written ONLY for critical issues (threading, DB transactions, file I/O)
+7. **North Star IT** — End-to-end Playwright/Selenium IT tests are the ultimate validation that features work
+
+These principles ensure tests are fast, reliable, maintainable, and catch real bugs.
+
+---
+
 ## Test Naming (MANDATORY)
 
 **Test Suffix Conventions:**
@@ -64,6 +80,89 @@ Each test run MUST generate a separate coverage report:
 Review coverage reports regularly to identify gaps and improve test quality. Set minimum coverage thresholds per test type.
 
 See Java/language-specific templates for JaCoCo configuration.
+
+### Iterative TDD Workflow (MANDATORY)
+
+Development is driven by end-to-end (IT) tests that iterate through layers:
+
+**Workflow:**
+1. Write end-to-end IT test (full feature flow)
+2. Run → fails at a layer boundary (e.g., Service → Repository)
+3. **Pause the IT** (mark as suspended/skipped, don't proceed)
+4. **Create LT for that layer** (test only the paused layer with mocked adjacent layers)
+5. Implement code to make LT pass
+6. Resume IT → continues, fails at next boundary
+7. Repeat until IT passes end-to-end
+
+**Key Constraint:** LT scope = exactly what the paused IT needs at that layer, nothing more. Prevents over-engineering and scope creep.
+
+**Example:**
+```
+Paused IT: "User creates order and receives confirmation"
+↓ Fails: OrderService cannot create order
+↓ Create LT: OrderServiceLT tests createOrder() with mocked OrderRepository
+↓ LT passes, OrderService implemented → Resume IT
+↓ IT fails: OrderRepository cannot persist to database
+↓ Create LT: OrderRepositoryLT tests SQL query execution
+↓ LT passes → Resume IT
+↓ IT passes end-to-end ✅
+```
+
+### Layer-Scoped Testing (MANDATORY)
+
+Each test targets a single responsibility boundary and does not span unnecessary layers.
+
+**Rules:**
+- **LT tests one layer** — Mock or stub all adjacent layers
+- **IT tests flow across layers** — Only start IT when all layers are connected
+- **No cross-layer leakage** — A Service LT does not test Repository internals
+
+**Benefits:**
+- Failures are localized (easy to debug)
+- Tests run fast (fewer dependencies)
+- Layer boundaries are explicit
+- Refactoring one layer doesn't break unrelated tests
+
+**Testing Pyramid:**
+```
+       ↑ End-to-End (IT) — Slow, comprehensive, no mocks
+       │ Layer Tests (LT) — Medium speed, mocked adjacent layers
+       │ Unit Tests (Test) — Fast, but ONLY for critical issues
+       ↓ (rare)
+```
+
+### Critical-Issue-Only Unit Tests
+
+Unit tests (*Test) are written ONLY for critical issues that require isolated testing.
+
+**When to write unit tests:**
+- ✅ Threading/concurrency bugs discovered
+- ✅ Database transaction isolation issues
+- ✅ File I/O edge cases or race conditions
+- ❌ Default unit tests for normal code paths
+
+**Benefits:**
+- Faster test suite (fewer tests overall)
+- Focus on integration (where real bugs hide)
+- Unit tests stay high-signal (critical issues only)
+- No coverage target pressure
+
+**Example:**
+```java
+// ❌ Don't write this by default
+TEST(OrderValidator, ValidateEmail) { ... }
+TEST(OrderValidator, ValidateAmount) { ... }
+
+// ✅ Write this only if concurrency bug found
+TEST(OrderValidator, ThreadSafeValidation) {
+    // Test only the critical race condition
+    Thread t1 = new Thread(() -> validator.validate(order1));
+    Thread t2 = new Thread(() -> validator.validate(order2));
+    t1.start(); t2.start();
+    t1.join(); t2.join();
+    // Verify no race condition, no data corruption
+}
+```
 
 ---
 
@@ -170,6 +269,36 @@ public void shouldValidateEmail() {
 ```java
 when(validator.validate(any())).thenReturn(true);  // ❌ Broad mock, defeats test
 ```
+
+### End-to-End Validation — The North Star (MANDATORY)
+
+Integration tests (IT) are the ultimate validation that features work end-to-end.
+
+**Rules:**
+- **Every feature has an IT** — Playwright/Selenium IT validates the full user flow
+- **IT runs on real system** — No mocking, no stubs; all layers connected
+- **IT validates user perspective** — Tests what the user sees and does, not internal implementation
+- **LT supports IT** — Layer tests fill gaps when IT fails at boundaries, but IT is the goal
+- **Pass IT = feature done** — When IT passes, the feature works end-to-end
+
+**Example:**
+```typescript
+// ✅ North Star IT: User completes order end-to-end
+test('user creates order and receives confirmation', () => {
+  const client = new WebClient();
+  client.login('user@example.com', 'password');
+  
+  client.navigate('/products');
+  client.addToCart('Widget', 1);
+  client.checkout();
+  
+  const confirmation = client.getCurrentPage();
+  expect(confirmation).toContain('Order #12345 confirmed');  // What user sees
+  expect(confirmation).toContain('ship to: 123 Main St');
+});
+```
+
+When this IT passes, the feature works end-to-end. Supporting LTs verify individual layers (auth, cart, checkout, shipping) but the IT is the north star.
 
 ---
 
