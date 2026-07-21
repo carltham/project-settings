@@ -11,6 +11,9 @@
       "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -name \"README*\" -o -name \"*.md\" -type f 2>/dev/null | grep -E \"\\(EBS-Brain|GSPos|GSBoard|GSLang|monosplitter|gustafs\\)\" | head -10)",
       "Read(//mnt/DATA/0.present-projects/Active/EBS-Brain/**)",
       "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -name \"README*\" -o -name \"Readme*\" | head -15)"
+    ],
+    "additionalDirectories": [
+      "/mnt/DATA/WORKSPACE/global-resources/AI-logs"
     ]
   }
 }
