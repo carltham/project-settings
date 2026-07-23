@@ -1,5 +1,6 @@
 {
   "permissions": {
+    "ask": ["Edit(*)", "Write(*)"],
     "allow": [
       "Read(//mnt/DATA/WORKSPACE/project-architecture/originals/**)",
       "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -type f \\\\\\( -name \"README*\" -o -name \"*.md\" \\\\\\) | head -20)",
@@ -12,8 +13,46 @@
       "Read(//mnt/DATA/0.present-projects/Active/EBS-Brain/**)",
       "Bash(find /mnt/DATA/0.present-projects/Active -maxdepth 2 -name \"README*\" -o -name \"Readme*\" | head -15)"
     ],
-    "additionalDirectories": [
-      "/mnt/DATA/WORKSPACE/global-resources/AI-logs"
+    "additionalDirectories": ["/mnt/DATA/WORKSPACE/global-resources/AI-logs"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash(*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Remind: Read CLAUDE.md rules'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Confirm you\\'ve read CLAUDE.md'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit(*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '⚠️  WARNING: About to modify file - explicit permission required'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write(*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '⚠️  WARNING: About to write file - explicit permission required'"
+          }
+        ]
+      }
     ]
   }
 }
